@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34701.34
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMTV-VSaveEditor", "SMTV-VSaveEditor\SMTV-VSaveEditor.csproj", "{9333FACE-6DE8-4915-BC4B-C16C4A9A5FAD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9333FACE-6DE8-4915-BC4B-C16C4A9A5FAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9333FACE-6DE8-4915-BC4B-C16C4A9A5FAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9333FACE-6DE8-4915-BC4B-C16C4A9A5FAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9333FACE-6DE8-4915-BC4B-C16C4A9A5FAD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {680F5B91-4BE7-4901-BACF-4BCDD10A001C}
+	EndGlobalSection
+EndGlobal
