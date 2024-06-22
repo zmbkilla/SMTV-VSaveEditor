@@ -138,7 +138,8 @@ namespace SMTV_VSaveEditor
             File.WriteAllBytes(path, ms.ToArray());
             bw.Close();
             MessageBox.Show("Saved to "+path);
-
+            Form1 fm1 = new Form1();
+            fm1.panel1.Controls.Clear();
 
 
 

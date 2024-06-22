@@ -162,11 +162,26 @@ namespace SMTV_VSaveEditor
                 
                 for (int i = 0; i < statnames.Length; i++)
                 {
-                    string stat = BitConverter.ToString(reader.ReadBytes(1)).Replace("-","");
+                    string reverse = "";
+                    string stat = BitConverter.ToString(reader.ReadBytes(2)).Replace("-","");
+                    reverse = stat;
+                    stat = stat.Replace(stat.Substring(0, 2),stat.Substring(2,2));
+                    stat = stat.Insert(2,reverse.Substring(0,2));
+                    stat = stat.Remove(4,2);
                     ms.Position = plstata;
-                    string stata = BitConverter.ToString(reader.ReadBytes(1)).Replace("-", "");
+                    
+                    string stata = BitConverter.ToString(reader.ReadBytes(2)).Replace("-", "");
+                    reverse = stata;
+                    stata = stata.Replace(stata.Substring(0, 2), stata.Substring(2, 2));
+                    stata = stata.Insert(2, reverse.Substring(0, 2));
+                    stata = stata.Remove(4, 2);
                     ms.Position = plstatc;
-                    string statc = BitConverter.ToString(reader.ReadBytes(1)).Replace("-", "");
+                    
+                    string statc = BitConverter.ToString(reader.ReadBytes(2)).Replace("-", "");
+                    reverse = statc;
+                    statc = statc.Replace(statc.Substring(0, 2), statc.Substring(2, 2));
+                    statc = statc.Insert(2, reverse.Substring(0, 2));
+                    statc = statc.Remove(4, 2);
                     stat = Int32.Parse(stat,System.Globalization.NumberStyles.HexNumber).ToString();
                     stata = Int32.Parse(stata, System.Globalization.NumberStyles.HexNumber).ToString();
                     statc = Int32.Parse(statc, System.Globalization.NumberStyles.HexNumber).ToString();
@@ -300,6 +315,14 @@ namespace SMTV_VSaveEditor
         private void Closebtn_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void Demonbtn_Click(object sender, EventArgs e)
+        {
+            var dmn = new Demon();
+            dmn.svpath = savepath;
+            panel1.Controls.Clear();
+            panel1.Controls.Add(dmn);
         }
     }
 }

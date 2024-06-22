@@ -37,6 +37,7 @@
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.PLDatabtn = new System.Windows.Forms.Button();
+            this.Demonbtn = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -103,6 +104,7 @@
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.PLDatabtn);
+            this.flowLayoutPanel1.Controls.Add(this.Demonbtn);
             this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 57);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(127, 353);
@@ -120,6 +122,19 @@
             this.PLDatabtn.Text = "Player Data";
             this.PLDatabtn.UseVisualStyleBackColor = true;
             this.PLDatabtn.Click += new System.EventHandler(this.PLDatabtn_Click);
+            // 
+            // Demonbtn
+            // 
+            this.Demonbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.Demonbtn.AutoSize = true;
+            this.Demonbtn.Location = new System.Drawing.Point(3, 34);
+            this.Demonbtn.MinimumSize = new System.Drawing.Size(75, 25);
+            this.Demonbtn.Name = "Demonbtn";
+            this.Demonbtn.Size = new System.Drawing.Size(124, 25);
+            this.Demonbtn.TabIndex = 4;
+            this.Demonbtn.Text = "Demon";
+            this.Demonbtn.UseVisualStyleBackColor = true;
+            this.Demonbtn.Click += new System.EventHandler(this.Demonbtn_Click);
             // 
             // Form1
             // 
@@ -146,13 +161,14 @@
         #endregion
 
         private System.Windows.Forms.Button Closebtn;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
         private System.Windows.Forms.ToolStripMenuItem Opensavebtn;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Button PLDatabtn;
+        private System.Windows.Forms.Button Demonbtn;
+        public System.Windows.Forms.Panel panel1;
     }
 }
 
