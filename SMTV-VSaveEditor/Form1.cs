@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Parameters;
+using System.Data.OleDb;
+using System.Drawing;
 
 namespace SMTV_VSaveEditor
 {
@@ -121,14 +123,11 @@ namespace SMTV_VSaveEditor
         private void PLDatabtn_Click(object sender, EventArgs e)
         {
             panel1.Controls.Clear();
-            var pld = new PLData
-            {
-                Dock = DockStyle.Fill,
-                
-            };
+            var pld = new PLData();
+            
 
 
-            panel1.Controls.Add(pld);
+            
             string fname = "",lname="";
             if (File.Exists(savepath))
             {
@@ -179,45 +178,121 @@ namespace SMTV_VSaveEditor
                 }
 
                 //skills
-                var skilltab = pld.Controls.Find("skillview", true);
-                DataGridView dgvskill = skilltab[0] as DataGridView;
+                var skilltab = pld.Controls.Find("SPanel", true);
+                //DataGridView dgvskill = skilltab[0] as DataGridView;
+                
                 string[] skills = File.ReadAllLines(Directory.GetCurrentDirectory() + "\\skills.txt");
                 int skilloff = ploff + 108;
                 int maxskill = 8;
+                int skilloffadd = 6;
                 ms.Position = skilloff;
                 //load excel as db
-                //DataGridViewComboBoxColumn col = new DataGridViewComboBoxColumn();
-                DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
-                col.Name = "Skill Name";
-                //col.DataSource = ReadDemonDB();
-                dgvskill.Columns.Add(col);
+                
+                Panel skp = pld.SPanel;
+                int z = 0;
+                for (int i = 0;i < 8; i++)
+                {
+                    ComboBox cb = new ComboBox();
+                    cb.BindingContext = new BindingContext();
+                    
+                    cb.DataSource = skills;
+                    if(i < 4)
+                    {
+                        cb.Location = new Point(0, i * 25 + 5);
+                    }
+                    else
+                    {
+                        cb.Location = new Point(200, z * 25 + 5);
+                        z++;
+                    }
+                    
+                    skp.Controls.Add(cb);
+
+                }
+                
+
+                
+                
 
 
+                
+                
+               
+                DataSet ds = new DataSet();
+                string[] sload = new string[445];
+                sload[0] = "none";
+                for (int i = 0; i < sload.Length; i++)
+                {
+                    sload[i] = skills[i];
+                }
+                int[] skillid = new int[8];
+                int x = 1;
                 for (int i = 0; i < maxskill; i++)
                 {
-                    string skillhex = BitConverter.ToString(reader.ReadBytes(2)).Replace("-", "");
-                    string skillstr = "";
-                    for (int y = 0; y < skills.Length; y++)
-                    {
-                        if (skills[y].Contains(skillhex))
-                        {
-                            skillstr = skills[y].Replace(skillhex, "");
-                        }
-                    }
+                    ms.Position = skilloff + (8 * i);
+                    
+                    int skillint = BitConverter.ToInt32(reader.ReadBytes(4), 0);
+                    skillid[i] = skillint;
+                    ComboBox pcb = skp.Controls[i] as ComboBox;
+                    pcb.SelectedIndex = skillint;
 
-                    dgvskill.Rows.Add(i,skillstr);
-                    ms.Position += 6;
+                    skilloffadd = skilloffadd + 2;
+                    x++;
+                    
                 }
+                
+                //for (int i = 0; i < maxskill; i++)
+                //{
+                //    string skillhex = BitConverter.ToString(reader.ReadBytes(2)).Replace("-", "");
+                //    string skillstr = "";
+                //    for (int y = 0; y < skills.Length; y++)
+                //    {
+                //        if (skills[y].Contains(skillhex))
+                //        {
+                //            skillstr = skills[y].Replace(skillhex, "");
+                //        }
+                //    }
+                //
+                //    dgvskill.Rows.Add(i,skillstr);
+                //    ms.Position += 6;
+                //}
 
-
+                panel1.Controls.Add(pld);
             }
            
         }
 
 
+        public static DataTable ReadDemonDB()
+        {
+            var fileName = string.Format("{0}\\DemonDB.xls", Directory.GetCurrentDirectory());
+            var filetest = Encoding.ASCII.GetString(
+    Encoding.Convert(
+        Encoding.UTF8,
+        Encoding.GetEncoding(
+            Encoding.ASCII.EncodingName,
+            new EncoderReplacementFallback(string.Empty),
+            new DecoderExceptionFallback()
+            ),
+        Encoding.UTF8.GetBytes(fileName)
+    ));
+            var connectionString = string.Format("Provider=Microsoft.ACE.OLEDB.12.0; data source={0};User Id =admin;Password=;Extended Properties=Excel 8.0;", fileName);
+
+            var adapter = new OleDbDataAdapter("SELECT * FROM [DemonList$]", connectionString);
+            var ds = new DataSet();
+            var data = new DataTable();
+            adapter.Fill(data);
 
 
-        
+
+
+            adapter.Dispose();
+            ds.Dispose();
+
+            return data;
+        }
+
+
 
 
 

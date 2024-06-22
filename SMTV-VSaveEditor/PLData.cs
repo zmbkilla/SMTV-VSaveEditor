@@ -67,7 +67,7 @@ namespace SMTV_VSaveEditor
             testoff = stataoff.ToString("X2");
             int statcoff = stataoff + 16;
             testoff = statcoff.ToString("X2");
-            bw.BaseStream.Position = stataoff;
+            bw.BaseStream.Position = statoff;
             for(int i = 0; i < 7; i++)
             {
                 byte[] sbase = BitConverter.GetBytes(Convert.ToInt32(statview.Rows[i].Cells[1].Value));
@@ -78,7 +78,7 @@ namespace SMTV_VSaveEditor
                 {
                     MessageBox.Show("t");
                 }
-                bw.Write(sbase,0,2);
+                bw.Write(sbase,0,4);
                 bw.BaseStream.Position = stataoff;
                 if (testoff == "9D6")
                 {
@@ -86,14 +86,14 @@ namespace SMTV_VSaveEditor
                 }
                 testoff = bw.BaseStream.Position.ToString("X2");
 
-                bw.Write(sadd,0,2);
+                bw.Write(sadd,0,4);
                 bw.BaseStream.Position = statcoff;
                 if (testoff == "9D6")
                 {
                     MessageBox.Show("t");
                 }
                 testoff = bw.BaseStream.Position.ToString("X2");
-                bw.Write(sc,0,2);
+                bw.Write(sc,0,4);
                 statoff += 2;
                 stataoff =statoff+ 16;
                 statcoff =stataoff+ 16;
@@ -106,16 +106,30 @@ namespace SMTV_VSaveEditor
             }
             //skills
             offset = reset;
-
-            int skilloff = offset = 108;
-            int skillcount = 0;
-            for(int i = 0; i< skillview.Rows.Count;i++)
+            int skilloff = offset + 108;
+            int skilloffa = 8;
+            bw.BaseStream.Position = skilloff;
+            
+            for (int i = 0; i < 8; i++)
             {
-                if (skillview.Rows[i].Cells[1].Value != "" || skillview.Rows[i].Cells[1].Value != null)
-                {
-                    skillcount++;
-                }
+                skilloff = skilloff + (skilloffa * i);
+                bw.BaseStream.Position = skilloff;
+                ComboBox cbb = SPanel.Controls[i] as ComboBox;
+                byte[] skbyte = BitConverter.GetBytes(cbb.SelectedIndex);
+                bw.Write(skbyte, 0, 4);
+                skilloff = offset + 108;
+                
             }
+
+            //int skilloff = offset = 108;
+            //int skillcount = 0;
+            //for(int i = 0; i< skillview.Rows.Count;i++)
+            //{
+            //    if (skillview.Rows[i].Cells[1].Value != "" || skillview.Rows[i].Cells[1].Value != null)
+            //    {
+            //        skillcount++;
+            //    }
+            //}
             
             
 
@@ -127,6 +141,12 @@ namespace SMTV_VSaveEditor
 
 
 
+
+        }
+
+        private void PLData_Load(object sender, EventArgs e)
+        {
+            
 
         }
     }

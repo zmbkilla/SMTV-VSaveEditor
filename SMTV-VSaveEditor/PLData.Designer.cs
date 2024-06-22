@@ -40,10 +40,8 @@
             this.Base = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Add = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Combined = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.skillview = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SPanel = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.statview)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.skillview)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -141,27 +139,19 @@
             this.Combined.HeaderText = "Combined";
             this.Combined.Name = "Combined";
             // 
-            // skillview
+            // SPanel
             // 
-            this.skillview.AllowUserToAddRows = false;
-            this.skillview.AllowUserToDeleteRows = false;
-            this.skillview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.skillview.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn2});
-            this.skillview.Location = new System.Drawing.Point(79, 346);
-            this.skillview.Name = "skillview";
-            this.skillview.Size = new System.Drawing.Size(443, 112);
-            this.skillview.TabIndex = 13;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.HeaderText = "Index";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.SPanel.AutoScroll = true;
+            this.SPanel.AutoScrollMinSize = new System.Drawing.Size(100, 100);
+            this.SPanel.Location = new System.Drawing.Point(79, 329);
+            this.SPanel.Name = "SPanel";
+            this.SPanel.Size = new System.Drawing.Size(443, 108);
+            this.SPanel.TabIndex = 13;
             // 
             // PLData
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.Controls.Add(this.skillview);
+            this.Controls.Add(this.SPanel);
             this.Controls.Add(this.statview);
             this.Controls.Add(this.Savebtn);
             this.Controls.Add(this.label4);
@@ -172,8 +162,8 @@
             this.Controls.Add(this.label1);
             this.Name = "PLData";
             this.Size = new System.Drawing.Size(861, 517);
+            this.Load += new System.EventHandler(this.PLData_Load);
             ((System.ComponentModel.ISupportInitialize)(this.statview)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.skillview)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -193,7 +183,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Base;
         private System.Windows.Forms.DataGridViewTextBoxColumn Add;
         private System.Windows.Forms.DataGridViewTextBoxColumn Combined;
-        private System.Windows.Forms.DataGridView skillview;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        public System.Windows.Forms.Panel SPanel;
     }
 }
