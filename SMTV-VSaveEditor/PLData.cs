@@ -78,7 +78,7 @@ namespace SMTV_VSaveEditor
                 {
                     MessageBox.Show("t");
                 }
-                bw.Write(sbase,0,4);
+                bw.Write(sbase,0,2);
                 bw.BaseStream.Position = stataoff;
                 if (testoff == "9D6")
                 {
@@ -86,14 +86,14 @@ namespace SMTV_VSaveEditor
                 }
                 testoff = bw.BaseStream.Position.ToString("X2");
 
-                bw.Write(sadd,0,4);
+                bw.Write(sadd,0,2);
                 bw.BaseStream.Position = statcoff;
                 if (testoff == "9D6")
                 {
                     MessageBox.Show("t");
                 }
                 testoff = bw.BaseStream.Position.ToString("X2");
-                bw.Write(sc,0,4);
+                bw.Write(sc,0,2);
                 statoff += 2;
                 stataoff =statoff+ 16;
                 statcoff =stataoff+ 16;
@@ -116,7 +116,7 @@ namespace SMTV_VSaveEditor
                 bw.BaseStream.Position = skilloff;
                 ComboBox cbb = SPanel.Controls[i] as ComboBox;
                 byte[] skbyte = BitConverter.GetBytes(cbb.SelectedIndex);
-                bw.Write(skbyte, 0, 4);
+                bw.Write(skbyte, 0, 2);
                 skilloff = offset + 108;
                 
             }
