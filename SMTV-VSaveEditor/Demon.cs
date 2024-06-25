@@ -80,7 +80,30 @@ namespace SMTV_VSaveEditor
 
         private void DemonIDbox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+            string id = "dev";
+            switch (DemonIDbox.SelectedIndex.ToString().Length)
+            {
+                case 1:
+                    id += "00" + Convert.ToString(DemonIDbox.SelectedIndex);
+                    break;
+                case 2:
+                    id += "0" + Convert.ToString(DemonIDbox.SelectedIndex);
+                    break;
+                case 3:
+                    id += Convert.ToString(DemonIDbox.SelectedIndex + 1);
+                break;
+                case 4:
+                    id = "";
+                break;
+            }
+            try
+            {
+                pictureBox1.Image = (Image)Properties.Resources.ResourceManager.GetObject(id);
+            }
+            catch
+            {
+
+            }
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
@@ -171,7 +194,7 @@ namespace SMTV_VSaveEditor
                 for (int y = 0; y < 7; y++)
                 {
                     bw.BaseStream.Position = offsets[0]+(y*2);
-                MessageBox.Show(offsets[0]+(y*2).ToString("X2"));
+                //MessageBox.Show(offsets[0]+(y*2).ToString("X2"));
                     bw.Write(BitConverter.GetBytes(Convert.ToInt32(DemonStatdgv.Rows[y].Cells[1].Value)),0,2);
                     bw.BaseStream.Position = offsets[1]+(y*2);
                     bw.Write(BitConverter.GetBytes(Convert.ToInt32(DemonStatdgv.Rows[y].Cells[2].Value)), 0, 2);

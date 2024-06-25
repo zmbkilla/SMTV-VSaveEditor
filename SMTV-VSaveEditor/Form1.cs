@@ -55,7 +55,11 @@ namespace SMTV_VSaveEditor
                     if (lines[i].Contains("path:"))
                     {
                         savepath = lines[i].Replace("path:", "");
-                    MessageBox.Show("Loaded save from: " + savepath);
+                    if(savepath != "")
+                    {
+                        MessageBox.Show("Loaded save from: " + savepath);
+                    }
+                    
                     }
                 }
             
@@ -75,8 +79,7 @@ namespace SMTV_VSaveEditor
                 }
             }
             byte[] savedata;
-            if(!File.Exists(pathloc))
-            {
+            
                 OpenFileDialog openFileDialog = new OpenFileDialog();
                 while (openFileDialog.FileName == "")
                 {
@@ -89,13 +92,13 @@ namespace SMTV_VSaveEditor
                 {
                     if (settings[i].Contains("path:"))
                     {
-                        settings[i] += openFileDialog.FileName;
+                        settings[i] = "path:"+openFileDialog.FileName;
                     }
 
                 }
                 File.WriteAllLines(default_file,settings);
                 pathloc = openFileDialog.FileName;
-            }
+            
             
             savedata = File.ReadAllBytes(pathloc);
             
@@ -117,7 +120,7 @@ namespace SMTV_VSaveEditor
             }
 
             savepath = pathloc;
-
+            MessageBox.Show("Loaded save from: " + savepath);
         }
 
         private void PLDatabtn_Click(object sender, EventArgs e)

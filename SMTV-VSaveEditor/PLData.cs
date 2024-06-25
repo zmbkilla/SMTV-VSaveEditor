@@ -20,7 +20,7 @@ namespace SMTV_VSaveEditor
         public string path = "";
         public int offset;
         public int reset;
-
+        Offsets ploffs = new Offsets();
         public PLData()
         {
             InitializeComponent();

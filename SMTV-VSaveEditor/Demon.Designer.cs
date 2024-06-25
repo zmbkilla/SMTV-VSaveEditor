@@ -38,8 +38,13 @@
             this.DstatBase = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DstatAdd = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DstatC = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DemonStatdgv)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.SuspendLayout();
             // 
             // DemonIDbox
@@ -82,7 +87,7 @@
             // 
             // Demonsavebtn
             // 
-            this.Demonsavebtn.Location = new System.Drawing.Point(250, 424);
+            this.Demonsavebtn.Location = new System.Drawing.Point(180, 494);
             this.Demonsavebtn.Name = "Demonsavebtn";
             this.Demonsavebtn.Size = new System.Drawing.Size(136, 23);
             this.Demonsavebtn.TabIndex = 4;
@@ -129,10 +134,42 @@
             this.DstatC.HeaderText = "Combined";
             this.DstatC.Name = "DstatC";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(368, 11);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(114, 73);
+            this.pictureBox1.TabIndex = 6;
+            this.pictureBox1.TabStop = false;
+            // 
+            // numericUpDown2
+            // 
+            this.numericUpDown2.Location = new System.Drawing.Point(180, 64);
+            this.numericUpDown2.Maximum = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.Size = new System.Drawing.Size(68, 20);
+            this.numericUpDown2.TabIndex = 7;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(126, 66);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(33, 13);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "Level";
+            // 
             // Demon
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.numericUpDown2);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.DemonStatdgv);
             this.Controls.Add(this.Demonsavebtn);
             this.Controls.Add(this.label1);
@@ -140,10 +177,12 @@
             this.Controls.Add(this.DSpanel);
             this.Controls.Add(this.DemonIDbox);
             this.Name = "Demon";
-            this.Size = new System.Drawing.Size(722, 485);
+            this.Size = new System.Drawing.Size(689, 636);
             this.Load += new System.EventHandler(this.Demon_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DemonStatdgv)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -161,5 +200,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn DstatBase;
         private System.Windows.Forms.DataGridViewTextBoxColumn DstatAdd;
         private System.Windows.Forms.DataGridViewTextBoxColumn DstatC;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private System.Windows.Forms.Label label2;
     }
 }
