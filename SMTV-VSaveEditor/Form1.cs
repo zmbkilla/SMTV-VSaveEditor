@@ -162,32 +162,43 @@ namespace SMTV_VSaveEditor
                 statnames[4] = "MAG";
                 statnames[5] = "AGI";
                 statnames[6] = "LU";
-                
+                int[] plstatoffsets = new int[21];
+                Offsets GSOffsets = new Offsets();
+                plstatoffsets[0] = GSOffsets.HPB;
+                plstatoffsets[1] = GSOffsets.MPB;
+                plstatoffsets[2] = GSOffsets.STB;
+                plstatoffsets[3] = GSOffsets.VIB;
+                plstatoffsets[4] = GSOffsets.MAB;
+                plstatoffsets[5] = GSOffsets.AGB;
+                plstatoffsets[6] = GSOffsets.LUB;
+                plstatoffsets[7] = GSOffsets.HPA;
+                plstatoffsets[8] = GSOffsets.MPA;
+                plstatoffsets[9] = GSOffsets.STA;
+                plstatoffsets[10] = GSOffsets.VIA;
+                plstatoffsets[11] = GSOffsets.MAA;
+                plstatoffsets[12] = GSOffsets.AGA;
+                plstatoffsets[13] = GSOffsets.LUA;
+                plstatoffsets[14] = GSOffsets.HPC;
+                plstatoffsets[15] = GSOffsets.MPC;
+                plstatoffsets[16] = GSOffsets.STC;
+                plstatoffsets[17] = GSOffsets.VIC;
+                plstatoffsets[18] = GSOffsets.MAC;
+                plstatoffsets[19] = GSOffsets.AGC;
+                plstatoffsets[20] = GSOffsets.LUC;
+
+
                 for (int i = 0; i < statnames.Length; i++)
                 {
-                    string reverse = "";
-                    string stat = BitConverter.ToString(reader.ReadBytes(2)).Replace("-","");
-                    reverse = stat;
-                    stat = stat.Replace(stat.Substring(0, 2),stat.Substring(2,2));
-                    stat = stat.Insert(2,reverse.Substring(0,2));
-                    stat = stat.Remove(4,2);
-                    ms.Position = plstata;
-                    
-                    string stata = BitConverter.ToString(reader.ReadBytes(2)).Replace("-", "");
-                    reverse = stata;
-                    stata = stata.Replace(stata.Substring(0, 2), stata.Substring(2, 2));
-                    stata = stata.Insert(2, reverse.Substring(0, 2));
-                    stata = stata.Remove(4, 2);
-                    ms.Position = plstatc;
-                    
-                    string statc = BitConverter.ToString(reader.ReadBytes(2)).Replace("-", "");
-                    reverse = statc;
-                    statc = statc.Replace(statc.Substring(0, 2), statc.Substring(2, 2));
-                    statc = statc.Insert(2, reverse.Substring(0, 2));
-                    statc = statc.Remove(4, 2);
-                    stat = Int32.Parse(stat,System.Globalization.NumberStyles.HexNumber).ToString();
-                    stata = Int32.Parse(stata, System.Globalization.NumberStyles.HexNumber).ToString();
-                    statc = Int32.Parse(statc, System.Globalization.NumberStyles.HexNumber).ToString();
+                    int stat = 0;
+                    int stata = 0;
+                    int statc = 0;
+
+                    ms.Position = plstatoffsets[i];
+                    stat = BitConverter.GetBytes(reader.ReadBytes(2), 0, 4);
+
+
+
+
                     dgv.Rows.Add(statnames[i], stat,stata,statc);
                     plstats +=2;
                     plstata = plstats + 16;
