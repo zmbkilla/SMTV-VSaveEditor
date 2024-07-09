@@ -38,21 +38,24 @@
             this.DstatBase = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DstatAdd = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DstatC = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.DResist = new System.Windows.Forms.Panel();
+            this.DPots = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DemonStatdgv)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // DemonIDbox
             // 
+            this.DemonIDbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DemonIDbox.FormattingEnabled = true;
             this.DemonIDbox.Location = new System.Drawing.Point(119, 36);
             this.DemonIDbox.Name = "DemonIDbox";
-            this.DemonIDbox.Size = new System.Drawing.Size(233, 21);
+            this.DemonIDbox.Size = new System.Drawing.Size(233, 28);
             this.DemonIDbox.TabIndex = 0;
             this.DemonIDbox.SelectedIndexChanged += new System.EventHandler(this.DemonIDbox_SelectedIndexChanged);
             // 
@@ -87,7 +90,7 @@
             // 
             // Demonsavebtn
             // 
-            this.Demonsavebtn.Location = new System.Drawing.Point(180, 494);
+            this.Demonsavebtn.Location = new System.Drawing.Point(180, 554);
             this.Demonsavebtn.Name = "Demonsavebtn";
             this.Demonsavebtn.Size = new System.Drawing.Size(136, 23);
             this.Demonsavebtn.TabIndex = 4;
@@ -134,17 +137,9 @@
             this.DstatC.HeaderText = "Combined";
             this.DstatC.Name = "DstatC";
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(368, 11);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(114, 73);
-            this.pictureBox1.TabIndex = 6;
-            this.pictureBox1.TabStop = false;
-            // 
             // numericUpDown2
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(180, 64);
+            this.numericUpDown2.Location = new System.Drawing.Point(180, 72);
             this.numericUpDown2.Maximum = new decimal(new int[] {
             150,
             0,
@@ -157,32 +152,57 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(126, 66);
+            this.label2.Location = new System.Drawing.Point(126, 74);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(33, 13);
             this.label2.TabIndex = 8;
             this.label2.Text = "Level";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(446, 11);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(166, 184);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 9;
+            this.pictureBox1.TabStop = false;
+            // 
+            // DResist
+            // 
+            this.DResist.Location = new System.Drawing.Point(48, 408);
+            this.DResist.Name = "DResist";
+            this.DResist.Size = new System.Drawing.Size(215, 140);
+            this.DResist.TabIndex = 10;
+            // 
+            // DPots
+            // 
+            this.DPots.Location = new System.Drawing.Point(306, 408);
+            this.DPots.Name = "DPots";
+            this.DPots.Size = new System.Drawing.Size(212, 140);
+            this.DPots.TabIndex = 11;
+            // 
             // Demon
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.DPots);
+            this.Controls.Add(this.DResist);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.numericUpDown2);
-            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.DemonStatdgv);
             this.Controls.Add(this.Demonsavebtn);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.DSpanel);
             this.Controls.Add(this.DemonIDbox);
+            this.Controls.Add(this.pictureBox1);
             this.Name = "Demon";
             this.Size = new System.Drawing.Size(689, 636);
             this.Load += new System.EventHandler(this.Demon_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DemonStatdgv)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -200,8 +220,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn DstatBase;
         private System.Windows.Forms.DataGridViewTextBoxColumn DstatAdd;
         private System.Windows.Forms.DataGridViewTextBoxColumn DstatC;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        public System.Windows.Forms.Panel DResist;
+        public System.Windows.Forms.Panel DPots;
     }
 }

@@ -41,6 +41,9 @@
             this.Add = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Combined = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SPanel = new System.Windows.Forms.Panel();
+            this.PLResistS = new System.Windows.Forms.Panel();
+            this.label5 = new System.Windows.Forms.Label();
+            this.Potential = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.statview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -98,7 +101,7 @@
             // 
             // Savebtn
             // 
-            this.Savebtn.Location = new System.Drawing.Point(380, 464);
+            this.Savebtn.Location = new System.Drawing.Point(386, 525);
             this.Savebtn.Name = "Savebtn";
             this.Savebtn.Size = new System.Drawing.Size(75, 23);
             this.Savebtn.TabIndex = 11;
@@ -147,12 +150,44 @@
             this.SPanel.AutoScrollMinSize = new System.Drawing.Size(100, 100);
             this.SPanel.Location = new System.Drawing.Point(79, 329);
             this.SPanel.Name = "SPanel";
-            this.SPanel.Size = new System.Drawing.Size(443, 108);
+            this.SPanel.Size = new System.Drawing.Size(311, 190);
             this.SPanel.TabIndex = 13;
+            // 
+            // PLResistS
+            // 
+            this.PLResistS.AutoScroll = true;
+            this.PLResistS.AutoScrollMargin = new System.Drawing.Size(100, 100);
+            this.PLResistS.AutoScrollMinSize = new System.Drawing.Size(100, 50);
+            this.PLResistS.Location = new System.Drawing.Point(432, 329);
+            this.PLResistS.Name = "PLResistS";
+            this.PLResistS.Size = new System.Drawing.Size(188, 190);
+            this.PLResistS.TabIndex = 14;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(415, 304);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(60, 13);
+            this.label5.TabIndex = 15;
+            this.label5.Text = "Resistance";
+            // 
+            // Potential
+            // 
+            this.Potential.AutoScroll = true;
+            this.Potential.AutoScrollMargin = new System.Drawing.Size(100, 100);
+            this.Potential.AutoScrollMinSize = new System.Drawing.Size(100, 50);
+            this.Potential.Location = new System.Drawing.Point(636, 329);
+            this.Potential.Name = "Potential";
+            this.Potential.Size = new System.Drawing.Size(203, 190);
+            this.Potential.TabIndex = 15;
             // 
             // PLData
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.Potential);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.PLResistS);
             this.Controls.Add(this.SPanel);
             this.Controls.Add(this.statview);
             this.Controls.Add(this.Savebtn);
@@ -163,7 +198,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "PLData";
-            this.Size = new System.Drawing.Size(861, 517);
+            this.Size = new System.Drawing.Size(861, 611);
             this.Load += new System.EventHandler(this.PLData_Load);
             ((System.ComponentModel.ISupportInitialize)(this.statview)).EndInit();
             this.ResumeLayout(false);
@@ -186,5 +221,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Add;
         private System.Windows.Forms.DataGridViewTextBoxColumn Combined;
         public System.Windows.Forms.Panel SPanel;
+        public System.Windows.Forms.Panel PLResistS;
+        private System.Windows.Forms.Label label5;
+        public System.Windows.Forms.Panel Potential;
     }
 }

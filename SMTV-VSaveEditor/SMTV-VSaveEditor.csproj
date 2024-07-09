@@ -77,17 +77,13 @@
       <DependentUpon>Demon.cs</DependentUpon>
     </Compile>
     <Compile Include="Demoninfo.cs" />
-    <Compile Include="DemonSprite.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DemonSprite.resx</DependentUpon>
-    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Itemoffsets.cs" />
     <Compile Include="Offsets.cs" />
     <Compile Include="PLData.cs">
       <SubType>UserControl</SubType>
@@ -99,10 +95,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Demon.resx">
       <DependentUpon>Demon.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DemonSprite.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>DemonSprite.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -118,6 +110,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

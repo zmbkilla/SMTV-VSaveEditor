@@ -1,10 +1,12 @@
-﻿using System;
+﻿using CommandLine.Text;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +19,7 @@ namespace SMTV_VSaveEditor
         public string svpath = "";
         public int off = 0xb60;
         public bool writingsave = false;
+        Offsets GSoff = new Offsets();
         public Demon()
         {
             InitializeComponent();
@@ -29,7 +32,7 @@ namespace SMTV_VSaveEditor
             DemonIDbox.SelectedIndex = 0;
             if(svpath != "")
             {
-                int[]dmndata = Demoninfo.Demondata(off +(Convert.ToInt32(numericUpDown1.Value)*424),svpath);
+                int[]dmndata = Demoninfo.Demondata(GSoff.DEMONHPB +(Convert.ToInt32(numericUpDown1.Value)*424),svpath);
                 DemonIDbox.SelectedIndex = dmndata[21];
 
                 //stats
@@ -74,6 +77,92 @@ namespace SMTV_VSaveEditor
                     
                     y++;
                 }
+
+                //resist
+
+                DResist.Controls.Clear();
+                string[] boxval = new string[4];
+                boxval[0] = "NULL";
+                boxval[1] = "RESIST";
+                boxval[2] = "NORMAL";
+                boxval[3] = "WEAK";
+                for (int i = 0; i < 7; i++)
+                {
+                    ComboBox comboBox = new ComboBox();
+
+                    comboBox.BindingContext = new BindingContext();
+                    comboBox.DataSource= boxval;
+                    comboBox.Location = new Point(50, i*25+5);
+                    switch (dmndata[i + 30])
+                    {
+                        case 0:
+                            comboBox.SelectedIndex = 0; break;
+                        case 50:
+                            comboBox.SelectedIndex = 1; break;
+                        case 100: comboBox.SelectedIndex = 2; break;
+                        case 125: comboBox.SelectedIndex = 3; break;
+                    }
+
+                    DResist.Controls.Add(comboBox);
+                }
+                string[] res = new string[7];
+                res[0] = "Physical";
+                res[1] = "Fire";
+                res[2] = "Ice";
+                res[3] = "Electric";
+                res[4] = "Force";
+                res[5] = "Dark";
+                res[6] = "Light";
+                for (int i = 0; i < 7; i++)
+                {
+                    Label lbl = new Label();
+                    lbl.Location = new Point(0, i * 25 + 5);
+                    lbl.Text = res[i];
+                    DResist.Controls.Add(lbl);
+
+                }
+
+                //potential
+                DPots.Controls.Clear();
+                string[] pots = new string[11];
+                pots[0] = "Physical";
+                pots[1] = "Fire";
+                pots[2] = "Ice";
+                pots[3] = "Electric";
+                pots[4] = "Force";
+                pots[5] = "Dark";
+                pots[6] = "Light";
+                pots[7] = "Almighty";
+                pots[8] = "Ailment";
+                pots[9] = "Healing";
+                pots[10] = "Support";
+                
+                for (int i = 0; i < 11; i++)
+                {
+                    NumericUpDown nm = new NumericUpDown();
+                    nm.BindingContext = new BindingContext();
+                    int checkval = dmndata[i + 37];
+                    if (checkval > 9)
+                    {
+                        int compute = 255 - checkval;
+                        compute = (compute * -1) - 1;
+                        checkval = compute;
+                    }
+                    nm.Minimum = -9;
+                    nm.Maximum = 9;
+                    nm.Location = new Point(50, i * 25 + 5);
+                    nm.Value = checkval;
+                    DPots.Controls.Add(nm);
+                }
+                for(int i = 0; i < 11; i++)
+                {
+                    Label lbl = new Label();
+                    lbl.BindingContext = new BindingContext();
+                    lbl.Location = new Point(0,i * 25 + 5);
+                    lbl.Text = pots[i];
+                    DPots.Controls.Add(lbl);
+                }
+
             }
             
         }
@@ -81,23 +170,31 @@ namespace SMTV_VSaveEditor
         private void DemonIDbox_SelectedIndexChanged(object sender, EventArgs e)
         {
             string id = "dev";
+
             switch (DemonIDbox.SelectedIndex.ToString().Length)
             {
                 case 1:
                     id += "00" + Convert.ToString(DemonIDbox.SelectedIndex);
+                    //id += ".png";
+
                     break;
                 case 2:
                     id += "0" + Convert.ToString(DemonIDbox.SelectedIndex);
+                    //id += ".png";
                     break;
                 case 3:
-                    id += Convert.ToString(DemonIDbox.SelectedIndex + 1);
-                break;
+                    id += Convert.ToString(DemonIDbox.SelectedIndex);
+                    //id += ".png";
+                    break;
                 case 4:
                     id = "";
                 break;
             }
             try
             {
+                
+                
+                
                 pictureBox1.Image = (Image)Properties.Resources.ResourceManager.GetObject(id);
             }
             catch
@@ -119,10 +216,10 @@ namespace SMTV_VSaveEditor
 
                     }
                     
-                    int[] dmndata = Demoninfo.Demondata(off + (Convert.ToInt32(numericUpDown1.Value) * 424), svpath);
+                    int[] dmndata = Demoninfo.Demondata(GSoff.DEMONHPB + (Convert.ToInt32(numericUpDown1.Value) * 424), svpath);
                     bool execute = true;
                     
-                    if(dmndata[21] != 65534 && execute != false)
+                    if(dmndata[21] != 65535 && execute != false)
                     {
                         DemonIDbox.SelectedIndex = dmndata[21];
                     }
@@ -175,6 +272,93 @@ namespace SMTV_VSaveEditor
 
                         y++;
                     }
+
+
+                    //resist
+
+                    DResist.Controls.Clear();
+                    string[] boxval = new string[4];
+                    boxval[0] = "NULL";
+                    boxval[1] = "RESIST";
+                    boxval[2] = "NORMAL";
+                    boxval[3] = "WEAK";
+                    for (int i = 0; i < 7; i++)
+                    {
+                        ComboBox comboBox = new ComboBox();
+
+                        comboBox.BindingContext = new BindingContext();
+                        comboBox.DataSource = boxval;
+                        comboBox.Location = new Point(50, i * 25 + 5);
+                        switch (dmndata[i + 30])
+                        {
+                            case 0:
+                                comboBox.SelectedIndex = 0; break;
+                            case 50:
+                                comboBox.SelectedIndex = 1; break;
+                            case 100: comboBox.SelectedIndex = 2; break;
+                            case 125: comboBox.SelectedIndex = 3; break;
+                        }
+
+                        DResist.Controls.Add(comboBox);
+                    }
+                    string[] res = new string[7];
+                    res[0] = "Physical";
+                    res[1] = "Fire";
+                    res[2] = "Ice";
+                    res[3] = "Electric";
+                    res[4] = "Force";
+                    res[5] = "Dark";
+                    res[6] = "Light";
+                    for (int i = 0; i < 7; i++)
+                    {
+                        Label lbl = new Label();
+                        lbl.Location = new Point(0, i * 25 + 5);
+                        lbl.Text = res[i];
+                        DResist.Controls.Add(lbl);
+
+                    }
+
+                    //potential
+                    DPots.Controls.Clear();
+                    string[] pots = new string[11];
+                    pots[0] = "Physical";
+                    pots[1] = "Fire";
+                    pots[2] = "Ice";
+                    pots[3] = "Electric";
+                    pots[4] = "Force";
+                    pots[5] = "Dark";
+                    pots[6] = "Light";
+                    pots[7] = "Almighty";
+                    pots[8] = "Ailment";
+                    pots[9] = "Healing";
+                    pots[10] = "Support";
+
+                    for (int i = 0; i < 11; i++)
+                    {
+                        NumericUpDown nm = new NumericUpDown();
+                        nm.BindingContext = new BindingContext();
+                        int checkval = dmndata[i + 37];
+                        if (checkval > 9)
+                        {
+                            int compute = 255 - checkval;
+                            compute = (compute * -1) - 1;
+                            checkval = compute;
+                        }
+                        nm.Minimum = -9;
+                        nm.Maximum = 9;
+                        nm.Location = new Point(50, i * 25 + 5);
+                        nm.Value = checkval;
+                        DPots.Controls.Add(nm);
+                    }
+                    for (int i = 0; i < 11; i++)
+                    {
+                        Label lbl = new Label();
+                        lbl.BindingContext = new BindingContext();
+                        lbl.Location = new Point(0, i * 25 + 5);
+                        lbl.Text = pots[i];
+                        DPots.Controls.Add(lbl);
+                    }
+
                 }
             }
 
@@ -204,7 +388,7 @@ namespace SMTV_VSaveEditor
                 }
                 //id
                 bw.BaseStream.Position = offsets[3];
-                bw.Write(BitConverter.GetBytes(DemonIDbox.SelectedIndex+1), 0, 2);
+                bw.Write(BitConverter.GetBytes(DemonIDbox.SelectedIndex), 0, 2);
                 byte[] testbyte = BitConverter.GetBytes(DemonIDbox.SelectedIndex);
                 string testhex = BitConverter.ToString(testbyte, 0, 2).Replace("-","");
                 //MessageBox.Show(BitConverter.GetBytes(DemonIDbox.SelectedIndex + 1).ToString());
@@ -213,9 +397,50 @@ namespace SMTV_VSaveEditor
                 {
                     bw.BaseStream.Position = offsets[4+z];
                     ComboBox cbb = DSpanel.Controls[z] as ComboBox;
-                    bw.Write(BitConverter.GetBytes(cbb.SelectedIndex), 0, 4);
+                    bw.Write(BitConverter.GetBytes(cbb.SelectedIndex), 0, 2);
 
                 }
+                //resist
+
+                for (int i = 0;i < 7; i++)
+                {
+                    int pos = offsets[12] + (2*i);
+                    bw.BaseStream.Position = pos;
+                    ComboBox cbb = DResist.Controls[i] as ComboBox;
+                    int val = 0;
+                    switch(cbb.SelectedIndex)
+                {
+                    case 0: val = 0; break;
+                        case 1: val = 50; break;
+                    case 2:val = 100; break;
+                    case 3:val = 125;break;
+                }
+                bw.Write(BitConverter.GetBytes(val), 0, 2);
+
+                }
+                //pot
+
+                for (int i = 0 ; i < 11 ; i++)
+                {
+                    int pos = offsets[13] + (2*i);
+                    bw.BaseStream.Position = pos;
+                    NumericUpDown nm = DPots.Controls[i] as NumericUpDown;
+                    int val = 0;
+                    val = Convert.ToInt32(nm.Value);
+                    if(val < 0)
+                    {
+                    val = 65535 - ((val * -1) - 1);
+                    }
+                    bw.Write(BitConverter.GetBytes(val),0,2);
+                }
+
+
+
+
+
+
+
+
 
             bw.Close();
             

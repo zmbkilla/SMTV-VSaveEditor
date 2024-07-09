@@ -14,12 +14,12 @@ namespace SMTV_VSaveEditor
     {
         public static int[] Demondata(int offset,string svloc)
         {
-            //format demonID,skill1,skill2,skill3,skill4,skill5,skill6,skill7,skill8
+            //format demonID,hpb, mpb,strb,vitb,magb,agib,lub,hpa, mpa,stra,vita,maga,agia,lua,hpc, mpc,strc,vitc,magc,agic,luc,skill1,skill2,skill3,skill4,skill5,skill6,skill7,skill8, resistphy,resistfir, resistice,resistele,resistfor,resistlig,resistdar,potphy,potfir,potice,potelec,potfor,potlig,potdar,potalm,potail,pothea,potsup
 
 
             int reset = offset;
             byte[] iddata = new byte[403];
-            int[] result = new int[30];
+            int[] result = new int[48];
             MemoryStream ms = new MemoryStream(File.ReadAllBytes(svloc));
             BinaryReader br = new BinaryReader(ms);
             int baseoff = offset;
@@ -83,7 +83,7 @@ namespace SMTV_VSaveEditor
             demoid = demoid.Remove(4,2);
 
             int rint = Int32.Parse(demoid,System.Globalization.NumberStyles.HexNumber);
-            result[21] = rint-1;
+            result[21] = rint;
 
             //get skills
             offset = reset;
@@ -107,15 +107,42 @@ namespace SMTV_VSaveEditor
 
             }
             
+            //resist
 
+            offset = reset;
+            int resistoffset = offset + 216;
+            
+            for (int i = 0; i < 7; i++)
+            {
+                skilloffset = offset + 216;
+                skilloffset = skilloffset + (i * 2);
+                ms.Position = skilloffset;
+                string Dresist = BitConverter.ToString(br.ReadBytes(1));
+                int convert = Int32.Parse(Dresist,System.Globalization.NumberStyles.HexNumber);
+                result[i+30] = convert;
 
+            }
+
+            //potentials
+
+            offset = reset;
+            int potoffset = offset + 384;
+            for (int i = 0; i < 11; i++)
+            {
+                potoffset = offset + 384;
+                potoffset = potoffset + (i * 2);
+                ms.Position = potoffset;
+                string Dpot = BitConverter.ToString(br.ReadBytes(1));
+                int convert = Int32.Parse(Dpot,System.Globalization.NumberStyles.HexNumber);
+                result[i+37] = convert;
+            }
 
             return result;
         }
 
         public static int[] demonoverwriteoff(int slot)
         {
-            int[] result = new int[12];
+             int[] result = new int[14];
             int offset = 0xb60 + (424*slot);
             result[0] = offset;
             result[1] = offset + 16;
@@ -131,9 +158,9 @@ namespace SMTV_VSaveEditor
             result[9] = result[8] + 8;
             result[10] = result[9] + 8;
             result[11] = result[10] + 8;
-
-
-
+            //resist&pot
+            result[12] = offset + 272;
+            result[13] = offset + 384;
             return result;
         }
         

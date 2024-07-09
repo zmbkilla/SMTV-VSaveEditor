@@ -10,6 +10,7 @@ using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Parameters;
 using System.Data.OleDb;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace SMTV_VSaveEditor
 {
@@ -20,8 +21,29 @@ namespace SMTV_VSaveEditor
         public int filecheck = 0x40;
         public string savepath;
         public int ploff=0x9d0;
-        
-        
+
+        //allow moving windows
+
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+
+        [DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+
+        private void Form1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
+        }
+
+
+
+        Offsets GSOffsets = new Offsets();
         public Form1()
         {
             InitializeComponent();
@@ -66,62 +88,7 @@ namespace SMTV_VSaveEditor
             
         }
 
-        private void Opensavebtn_Click(object sender, EventArgs e)
-        {
-            //check if path exist in setting file
-            string[] settings = File.ReadAllLines(default_file);
-            string pathloc = "";
-            for(int i = 0;i<settings.Length;i++)
-            {
-                if (settings[i].Contains("path:"))
-                {
-                    pathloc = settings[i].Replace("path:", "");
-                }
-            }
-            byte[] savedata;
-            
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                while (openFileDialog.FileName == "")
-                {
-                    openFileDialog.ShowDialog(this);
-                }
-
-                savedata = File.ReadAllBytes(openFileDialog.FileName);
-                //save location
-                for (int i = 0;i<settings.Length;i++)
-                {
-                    if (settings[i].Contains("path:"))
-                    {
-                        settings[i] = "path:"+openFileDialog.FileName;
-                    }
-
-                }
-                File.WriteAllLines(default_file,settings);
-                pathloc = openFileDialog.FileName;
-            
-            
-            savedata = File.ReadAllBytes(pathloc);
-            
-
-            
-
-            MemoryStream ms = new MemoryStream(savedata);
-
-            BinaryReader reader = new BinaryReader(ms);
-            ms.Position = 0x40;
-            byte[] readb = reader.ReadBytes(4);
-            string checks = "";
-            
-            checks = Encoding.ASCII.GetString(readb);
-            
-            if(checks != "GVAS")
-            {
-                MessageBox.Show("Error: invalid Save file", "Error");
-            }
-
-            savepath = pathloc;
-            MessageBox.Show("Loaded save from: " + savepath);
-        }
+        
 
         private void PLDatabtn_Click(object sender, EventArgs e)
         {
@@ -139,18 +106,16 @@ namespace SMTV_VSaveEditor
                 pld.path = savepath;
                 pld.offset = ploff;
                 
-                ms.Position = ploff;
+                ms.Position = GSOffsets.FN3;
 
                 
                 fname = Encoding.Unicode.GetString(reader.ReadBytes(18));
                 pld.Controls["textBox1"].Text = fname;
-                ms.Position = ploff + 24;
+                ms.Position = GSOffsets.LN2;
                 lname = Encoding.Unicode.GetString(reader.ReadBytes(18));
                 pld.Controls["textBox2"].Text= lname;
-                int plstats = ploff - 72;
-                int plstata = plstats + 16;
-                int plstatc = plstata + 16;
-                ms.Position = plstats;
+                
+                
                 var stattable = pld.Controls.Find("statview",true);
                 DataGridView dgv = stattable[0] as DataGridView;
                
@@ -163,7 +128,7 @@ namespace SMTV_VSaveEditor
                 statnames[5] = "AGI";
                 statnames[6] = "LU";
                 int[] plstatoffsets = new int[21];
-                Offsets GSOffsets = new Offsets();
+                
                 plstatoffsets[0] = GSOffsets.HPB;
                 plstatoffsets[1] = GSOffsets.MPB;
                 plstatoffsets[2] = GSOffsets.STB;
@@ -189,21 +154,36 @@ namespace SMTV_VSaveEditor
 
                 for (int i = 0; i < statnames.Length; i++)
                 {
-                    int stat = 0;
-                    int stata = 0;
-                    int statc = 0;
+                    string stat = "";
+                    string stata = "";
+                    string statc = "";
+                    string reverse = "";
 
                     ms.Position = plstatoffsets[i];
-                    stat = BitConverter.GetBytes(reader.ReadBytes(2), 0, 4);
-
-
+                    stat = BitConverter.ToString(reader.ReadBytes(2)).Replace("-", "");
+                    reverse = stat;
+                    stat = stat.Replace(stat.Substring(0, 2), stat.Substring(2, 2));
+                    stat = stat.Insert(2,reverse.Substring(0,2));
+                    stat = stat.Remove(4, 2);
+                    stat = Int32.Parse(stat,System.Globalization.NumberStyles.HexNumber).ToString();
+                    ms.Position = plstatoffsets[i + 7];
+                    stata = BitConverter.ToString(reader.ReadBytes(2)).Replace("-", "");
+                    reverse = stata;
+                    stata = stata.Replace(stata.Substring(0, 2), stata.Substring(2, 2));
+                    stata = stata.Insert(2, reverse.Substring(0, 2));
+                    stata = stata.Remove(4, 2);
+                    stata = Int32.Parse(stata, System.Globalization.NumberStyles.HexNumber).ToString();
+                    ms.Position = plstatoffsets[i + 14];
+                    statc = BitConverter.ToString(reader.ReadBytes(2)).Replace("-", "");
+                    reverse = statc;
+                    statc = statc.Replace(statc.Substring(0, 2), statc.Substring(2, 2));
+                    statc = statc.Insert(2, reverse.Substring(0, 2));
+                    statc = statc.Remove(4, 2);
+                    statc = Int32.Parse(statc, System.Globalization.NumberStyles.HexNumber).ToString();
 
 
                     dgv.Rows.Add(statnames[i], stat,stata,statc);
-                    plstats +=2;
-                    plstata = plstats + 16;
-                    plstatc = plstata + 16;
-                    ms.Position=plstats;
+                    
                 }
 
                 //skills
@@ -211,10 +191,14 @@ namespace SMTV_VSaveEditor
                 //DataGridView dgvskill = skilltab[0] as DataGridView;
                 
                 string[] skills = File.ReadAllLines(Directory.GetCurrentDirectory() + "\\skills.txt");
-                int skilloff = ploff + 108;
-                int maxskill = 8;
-                int skilloffadd = 6;
-                ms.Position = skilloff;
+                int[] PLskilloffs = new int[8];
+
+                PLskilloffs[0] = GSOffsets.SKILL1F; PLskilloffs[1] = GSOffsets.SKILL2F; PLskilloffs[2] = GSOffsets.SKILL3F; PLskilloffs[3] = GSOffsets.SKILL4F; PLskilloffs[4] = GSOffsets.SKILL5F; PLskilloffs[5] = GSOffsets.SKILL6F; PLskilloffs[6] = GSOffsets.SKILL7F; PLskilloffs[7] = GSOffsets.SKILL8F;
+
+                
+                
+                
+                
                 //load excel as db
                 
                 Panel skp = pld.SPanel;
@@ -231,7 +215,7 @@ namespace SMTV_VSaveEditor
                     }
                     else
                     {
-                        cb.Location = new Point(200, z * 25 + 5);
+                        cb.Location = new Point(150, z * 25 + 5);
                         z++;
                     }
                     
@@ -256,20 +240,169 @@ namespace SMTV_VSaveEditor
                 }
                 int[] skillid = new int[8];
                 int x = 1;
-                for (int i = 0; i < maxskill; i++)
+                for (int i = 0; i < 8; i++)
                 {
-                    ms.Position = skilloff + (8 * i);
+                    ms.Position = PLskilloffs[i];
                     
                     int skillint = BitConverter.ToInt32(reader.ReadBytes(4), 0);
                     skillid[i] = skillint;
                     ComboBox pcb = skp.Controls[i] as ComboBox;
                     pcb.SelectedIndex = skillint;
 
-                    skilloffadd = skilloffadd + 2;
-                    x++;
+                    
+                    
                     
                 }
-                
+
+                //Resist
+
+                int[] resistoff = new int[14];
+                resistoff[0] = GSOffsets.ResPHY;
+                resistoff[1] = GSOffsets.ResFIR;
+                resistoff[2] = GSOffsets.ResICE;
+                resistoff[3] = GSOffsets.ResELE;
+                resistoff[4] = GSOffsets.ResFOR;
+                resistoff[5] = GSOffsets.ResLIG;
+                resistoff[6] = GSOffsets.ResDAR;
+
+                resistoff[7] = GSOffsets.ResPHYC;
+                resistoff[8] = GSOffsets.ResFIRC;
+                resistoff[9] = GSOffsets.ResICEC;
+                resistoff[10] = GSOffsets.ResELEC;
+                resistoff[11] = GSOffsets.ResFORC;
+                resistoff[12] = GSOffsets.ResLIGC;
+                resistoff[13] = GSOffsets.ResDARC;
+
+                string[] resisttext = new string[4];
+                resisttext[0] = "Null";
+                resisttext[1] = "Resist";
+                resisttext[2] = "Normal";
+                resisttext[3] = "Weak";
+                string[] stats = new string[7];
+                stats[0] = "PHYSICAL";
+                stats[1] = "FIRE";
+                stats[2] = "ICE";
+                stats[3] = "ELECTRIC";
+                stats[4] = "FORCE";
+                stats[5] = "LIGHT";
+                stats[6] = "DARK";
+                Panel resistP = pld.PLResistS;
+                for(int i = 0; i < 7; i++)
+                {
+                    ComboBox cbb = new ComboBox();
+                    
+                    cbb.BindingContext = new BindingContext();
+                    cbb.DataSource = resisttext;
+                    cbb.Size = new Size(50, 20);
+                    
+                        
+                       cbb.Location = new Point(75, 5 + (i * 25));
+                    
+                    
+                    
+                    resistP.Controls.Add(cbb);
+
+                }
+
+
+                for(int i = 0; i < 7; i++)
+                {
+                    ms.Position = resistoff[i+7];
+                    ComboBox cbb = pld.PLResistS.Controls[i] as ComboBox;
+                    var val = BitConverter.ToString(reader.ReadBytes(1)).Replace("-", "");
+                    if (val == "00")
+                    {
+                        cbb.SelectedIndex = 0;
+                    } else if (val == "32")
+                    {
+                        cbb.SelectedIndex = 1;
+                    } else if(val == "64")
+                    {
+                        cbb.SelectedIndex= 2;
+                    } else if (val == "7D")
+                    {
+                        cbb.SelectedIndex = 3;
+                    }
+                }
+
+                for (int i = 0; i < 7; i++)
+                {
+                    Label lbl = new Label();
+                    lbl.Location = new Point(5,10+(i*25));
+                    lbl.Text = stats[i];
+                    pld.PLResistS.Controls.Add(lbl);
+                }
+
+
+                //Potentials
+
+                int[] potoffs = new int[11];
+                potoffs[0] = GSOffsets.POTPHY;
+                potoffs[1] = GSOffsets.POTFIR;
+                potoffs[2] = GSOffsets.POTICE;
+                potoffs[3] = GSOffsets.POTELE;
+                potoffs[4] = GSOffsets.POTFOR;
+                potoffs[5] = GSOffsets.POTLIG;
+                potoffs[6] = GSOffsets.POTDAR;
+                potoffs[7] = GSOffsets.POTALM;
+                potoffs[8] = GSOffsets.POTAIL;
+                potoffs[9] = GSOffsets.POTHEA;
+                potoffs[10] = GSOffsets.POTSUP;
+
+                string[]pottext = new string[11];
+                pottext[0] = "PHYSICAL";
+                pottext[1] = "FIRE";
+                pottext[2] = "ICE";
+                pottext[3] = "ELECTRIC";
+                pottext[4] = "FORCE";
+                pottext[5] = "LIGHT";
+                pottext[6] = "DARK";
+                pottext[7] = "ALMIGHTY";
+                pottext[8] = "AILMENT";
+                pottext[9] = "HEALING";
+                pottext[10] = "SUPPORT";
+
+                for (int i = 0;i < 11; i++)
+                {
+                    Panel pn = pld.Potential as Panel;
+                    NumericUpDown nm = new NumericUpDown();
+                    nm.BindingContext = new BindingContext();
+                    nm.Maximum = 9;
+                    nm.Minimum = -9;
+                    nm.Size = new Size(50, 20);
+                    nm.Location = new Point(75, 5 + (i * 25));
+                    pn.Controls.Add(nm);
+                }
+                for (int i = 0; i < 11; i++)
+                {
+                    Panel pn = pld.Potential as Panel;
+                    Label lbl = new Label();
+                    lbl.BindingContext = new BindingContext();
+                    lbl.Text = pottext[i];
+                    lbl.Location = new Point(5, 10 + (i * 25));
+                    pn.Controls.Add(lbl);
+                }
+
+                for (int i=0; i < 11; i++)
+                {
+                    ms.Position = potoffs[i];
+                    Panel pn = pld.Potential as Panel;
+                    NumericUpDown nm = pn.Controls[i] as NumericUpDown;
+                    string readval = BitConverter.ToString(reader.ReadBytes(2)).Replace("-", "");
+                    string g2 = readval.Substring(0, 2);
+                    readval = readval.Replace(readval.Substring(0, 2), readval.Substring(2, 2));
+                    readval = readval.Insert(2, g2);
+                    readval = readval.Remove(4, 2);
+                    int val = Int32.Parse(readval,System.Globalization.NumberStyles.HexNumber);
+                    if(val <= 9)
+                    {
+                        nm.Value = val;
+                    }else if (val > 9)
+                    {
+                        nm.Value = 65535 - val;
+                    }
+                }
+
                 //for (int i = 0; i < maxskill; i++)
                 //{
                 //    string skillhex = BitConverter.ToString(reader.ReadBytes(2)).Replace("-", "");
@@ -337,6 +470,63 @@ namespace SMTV_VSaveEditor
             dmn.svpath = savepath;
             panel1.Controls.Clear();
             panel1.Controls.Add(dmn);
+        }
+
+        private void openDecryptedSaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //check if path exist in setting file
+            string[] settings = File.ReadAllLines(default_file);
+            string pathloc = "";
+            for (int i = 0; i < settings.Length; i++)
+            {
+                if (settings[i].Contains("path:"))
+                {
+                    pathloc = settings[i].Replace("path:", "");
+                }
+            }
+            byte[] savedata;
+
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            while (openFileDialog.FileName == "")
+            {
+                openFileDialog.ShowDialog(this);
+            }
+
+            savedata = File.ReadAllBytes(openFileDialog.FileName);
+            //save location
+            for (int i = 0; i < settings.Length; i++)
+            {
+                if (settings[i].Contains("path:"))
+                {
+                    settings[i] = "path:" + openFileDialog.FileName;
+                }
+
+            }
+            File.WriteAllLines(default_file, settings);
+            pathloc = openFileDialog.FileName;
+
+
+            savedata = File.ReadAllBytes(pathloc);
+
+
+
+
+            MemoryStream ms = new MemoryStream(savedata);
+
+            BinaryReader reader = new BinaryReader(ms);
+            ms.Position = 0x40;
+            byte[] readb = reader.ReadBytes(4);
+            string checks = "";
+
+            checks = Encoding.ASCII.GetString(readb);
+
+            if (checks != "GVAS")
+            {
+                MessageBox.Show("Error: invalid Save file", "Error");
+            }
+
+            savepath = pathloc;
+            MessageBox.Show("Loaded save from: " + savepath);
         }
     }
 }
