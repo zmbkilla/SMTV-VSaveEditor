@@ -16,10 +16,13 @@ namespace SMTV_VSaveEditor
 {
     public partial class Demon : UserControl
     {
-        public string svpath = "";
+        public byte[] svpath;
         public int off = 0xb60;
         public bool writingsave = false;
         Offsets GSoff = new Offsets();
+        Form1 fm = new Form1();
+        List<int[]> dsinfo = new List<int[]>();
+        DemonList dmnlist = new DemonList();
         public Demon()
         {
             InitializeComponent();
@@ -27,12 +30,18 @@ namespace SMTV_VSaveEditor
 
         private void Demon_Load(object sender, EventArgs e)
         {
+            //dsinfo = Demoninfo.Demonslots(fm.svdata);
+
+            //DemonIDbox.DataSource = File.ReadAllLines(Directory.GetCurrentDirectory() + "\\demon.txt");
+            DemonIDbox.DisplayMember = "Value";
+            DemonIDbox.ValueMember = "Key";
+            DemonIDbox.DataSource = new BindingSource(dmnlist.DemonIDs, null);
+
             
-            DemonIDbox.DataSource = File.ReadAllLines(Directory.GetCurrentDirectory() + "\\demon.txt");
-            DemonIDbox.SelectedIndex = 0;
-            if(svpath != "")
+            if(svpath != null)
             {
-                int[]dmndata = Demoninfo.Demondata(GSoff.DEMONHPB +(Convert.ToInt32(numericUpDown1.Value)*424),svpath);
+                byte[] ttt = svpath;
+                int[]dmndata = Demoninfo.Demondata(GSoff.DEMONHPB +(Convert.ToInt32(numericUpDown1.Value)*424),ttt);
                 DemonIDbox.SelectedIndex = dmndata[21];
 
                 //stats
@@ -81,11 +90,13 @@ namespace SMTV_VSaveEditor
                 //resist
 
                 DResist.Controls.Clear();
-                string[] boxval = new string[4];
+                string[] boxval = new string[6];
                 boxval[0] = "NULL";
                 boxval[1] = "RESIST";
                 boxval[2] = "NORMAL";
                 boxval[3] = "WEAK";
+                boxval[4] = "Drain";
+                boxval[5] = "REPEL";
                 for (int i = 0; i < 7; i++)
                 {
                     ComboBox comboBox = new ComboBox();
@@ -101,6 +112,8 @@ namespace SMTV_VSaveEditor
                             comboBox.SelectedIndex = 1; break;
                         case 100: comboBox.SelectedIndex = 2; break;
                         case 125: comboBox.SelectedIndex = 3; break;
+                        case 999: comboBox.SelectedIndex=4; break;
+                        case 1000:comboBox.SelectedIndex = 5; break;
                     }
 
                     DResist.Controls.Add(comboBox);
@@ -148,6 +161,7 @@ namespace SMTV_VSaveEditor
                         compute = (compute * -1) - 1;
                         checkval = compute;
                     }
+
                     nm.Minimum = -9;
                     nm.Maximum = 9;
                     nm.Location = new Point(50, i * 25 + 5);
@@ -163,6 +177,15 @@ namespace SMTV_VSaveEditor
                     DPots.Controls.Add(lbl);
                 }
 
+                //innate
+                SkillsData sd = new SkillsData();
+
+                DIScmb.DisplayMember = "Value";
+                DIScmb.ValueMember = "Key";
+                DIScmb.DataSource = new BindingSource(sd.ISkillIds, null);
+                DIScmb.SelectedValue = dmndata[48];
+
+
             }
             
         }
@@ -170,8 +193,8 @@ namespace SMTV_VSaveEditor
         private void DemonIDbox_SelectedIndexChanged(object sender, EventArgs e)
         {
             string id = "dev";
-
-            switch (DemonIDbox.SelectedIndex.ToString().Length)
+            var myKey = dmnlist.DemonIDs.FirstOrDefault(x => x.Value == DemonIDbox.SelectedValue.ToString()).Key;
+            switch (myKey.ToString().Length)
             {
                 case 1:
                     id += "00" + Convert.ToString(DemonIDbox.SelectedIndex);
@@ -209,14 +232,16 @@ namespace SMTV_VSaveEditor
             {
                 DemonIDbox.DataSource = File.ReadAllLines(Directory.GetCurrentDirectory() + "\\demon.txt");
 
-                if (svpath != "")
+                if (svpath != null)
                 {
                     if (numericUpDown1.Value == 8)
                     {
 
                     }
-                    
-                    int[] dmndata = Demoninfo.Demondata(GSoff.DEMONHPB + (Convert.ToInt32(numericUpDown1.Value) * 424), svpath);
+                    byte[] ttt = svpath;
+                    int[] dmndata = Demoninfo.Demondata(GSoff.DEMONHPB + (Convert.ToInt32(numericUpDown1.Value) * 424), ttt);
+                    //List<int[]> ds = Demoninfo.Demonslots(svpath);
+                    //int[] dmndata = dsinfo.ElementAt(Convert.ToInt32(numericUpDown1.Value));
                     bool execute = true;
                     
                     if(dmndata[21] != 65535 && execute != false)
@@ -358,6 +383,8 @@ namespace SMTV_VSaveEditor
                         lbl.Text = pots[i];
                         DPots.Controls.Add(lbl);
                     }
+                    //innate
+                    DIScmb.SelectedValue = dmndata[48];
 
                 }
             }
@@ -366,7 +393,7 @@ namespace SMTV_VSaveEditor
 
         private void Demonsavebtn_Click(object sender, EventArgs e)
         {
-            MemoryStream stream = new MemoryStream(File.ReadAllBytes(svpath));
+            MemoryStream stream = new MemoryStream(fm.svdata);
             BinaryWriter bw = new BinaryWriter(stream);
             writingsave = true;
 
@@ -378,6 +405,7 @@ namespace SMTV_VSaveEditor
                 for (int y = 0; y < 7; y++)
                 {
                     bw.BaseStream.Position = offsets[0]+(y*2);
+
                 //MessageBox.Show(offsets[0]+(y*2).ToString("X2"));
                     bw.Write(BitConverter.GetBytes(Convert.ToInt32(DemonStatdgv.Rows[y].Cells[1].Value)),0,2);
                     bw.BaseStream.Position = offsets[1]+(y*2);
@@ -409,14 +437,18 @@ namespace SMTV_VSaveEditor
                     ComboBox cbb = DResist.Controls[i] as ComboBox;
                     int val = 0;
                     switch(cbb.SelectedIndex)
-                {
-                    case 0: val = 0; break;
+                    {
+                        case 0: val = 0; break;
                         case 1: val = 50; break;
-                    case 2:val = 100; break;
-                    case 3:val = 125;break;
-                }
+                        case 2:val = 100; break;
+                        case 3:val = 125;break;
+                        case 4: val = 999;break;
+                        case 5: val = 1000;break;
+                    }
                 bw.Write(BitConverter.GetBytes(val), 0, 2);
-
+                int pos2 = pos - 56;
+                bw.BaseStream.Position = pos2;
+                bw.Write(BitConverter.GetBytes(val), 0, 2);
                 }
                 //pot
 
@@ -432,11 +464,14 @@ namespace SMTV_VSaveEditor
                     val = 65535 - ((val * -1) - 1);
                     }
                     bw.Write(BitConverter.GetBytes(val),0,2);
-                }
+                    int pos2 = pos - 56;
+                    bw.BaseStream.Position = pos2;
+                    bw.Write(BitConverter.GetBytes(val), 0, 2);
+            }
 
 
-
-
+                //innate
+                
 
 
 
@@ -448,7 +483,7 @@ namespace SMTV_VSaveEditor
 
 
 
-            File.WriteAllBytes(svpath, stream.ToArray());
+            //File.WriteAllBytes(svpath, stream.ToArray());
             MessageBox.Show("Saved current demon to " + svpath);
             writingsave = false;
         }

@@ -174,6 +174,8 @@ namespace SMTV_VSaveEditor
         public  int DEMONPSUPC = 0xCF4;
 
         public  int DEMONINN = 0xCF8;
+        
+        
 
     }
 }

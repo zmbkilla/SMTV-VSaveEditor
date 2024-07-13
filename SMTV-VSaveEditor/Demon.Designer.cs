@@ -43,6 +43,8 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.DResist = new System.Windows.Forms.Panel();
             this.DPots = new System.Windows.Forms.Panel();
+            this.DIScmb = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DemonStatdgv)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -148,6 +150,7 @@
             this.numericUpDown2.Name = "numericUpDown2";
             this.numericUpDown2.Size = new System.Drawing.Size(68, 20);
             this.numericUpDown2.TabIndex = 7;
+            this.numericUpDown2.Visible = false;
             // 
             // label2
             // 
@@ -157,6 +160,7 @@
             this.label2.Size = new System.Drawing.Size(33, 13);
             this.label2.TabIndex = 8;
             this.label2.Text = "Level";
+            this.label2.Visible = false;
             // 
             // pictureBox1
             // 
@@ -169,22 +173,51 @@
             // 
             // DResist
             // 
-            this.DResist.Location = new System.Drawing.Point(48, 408);
+            this.DResist.AutoScroll = true;
+            this.DResist.AutoScrollMargin = new System.Drawing.Size(50, 50);
+            this.DResist.AutoScrollMinSize = new System.Drawing.Size(50, 50);
+            this.DResist.Enabled = false;
+            this.DResist.Location = new System.Drawing.Point(142, 408);
             this.DResist.Name = "DResist";
             this.DResist.Size = new System.Drawing.Size(215, 140);
             this.DResist.TabIndex = 10;
+            this.DResist.Visible = false;
             // 
             // DPots
             // 
-            this.DPots.Location = new System.Drawing.Point(306, 408);
+            this.DPots.AutoScroll = true;
+            this.DPots.AutoScrollMargin = new System.Drawing.Size(50, 50);
+            this.DPots.AutoScrollMinSize = new System.Drawing.Size(50, 50);
+            this.DPots.Enabled = false;
+            this.DPots.Location = new System.Drawing.Point(400, 408);
             this.DPots.Name = "DPots";
             this.DPots.Size = new System.Drawing.Size(212, 140);
             this.DPots.TabIndex = 11;
+            this.DPots.Visible = false;
+            // 
+            // DIScmb
+            // 
+            this.DIScmb.FormattingEnabled = true;
+            this.DIScmb.Location = new System.Drawing.Point(59, 411);
+            this.DIScmb.Name = "DIScmb";
+            this.DIScmb.Size = new System.Drawing.Size(121, 21);
+            this.DIScmb.TabIndex = 12;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(16, 408);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(37, 13);
+            this.label3.TabIndex = 13;
+            this.label3.Text = "Innate";
             // 
             // Demon
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.DIScmb);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.DPots);
             this.Controls.Add(this.DResist);
             this.Controls.Add(this.label2);
@@ -225,5 +258,7 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         public System.Windows.Forms.Panel DResist;
         public System.Windows.Forms.Panel DPots;
+        public System.Windows.Forms.ComboBox DIScmb;
+        private System.Windows.Forms.Label label3;
     }
 }

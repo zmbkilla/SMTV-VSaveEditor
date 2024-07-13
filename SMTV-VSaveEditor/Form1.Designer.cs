@@ -32,14 +32,18 @@
             this.Closebtn = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.Filebtn = new System.Windows.Forms.ToolStripDropDownButton();
+            this.openDecryptedSaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.decryptedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.encryptedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.Opensavebtn = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.PLDatabtn = new System.Windows.Forms.Button();
             this.Demonbtn = new System.Windows.Forms.Button();
-            this.Filebtn = new System.Windows.Forms.ToolStripDropDownButton();
-            this.openDecryptedSaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openEncryptedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -65,6 +69,7 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(821, 425);
             this.panel1.TabIndex = 1;
+            this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
             // 
             // toolStrip1
             // 
@@ -76,6 +81,50 @@
             this.toolStrip1.Stretch = true;
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
+            this.toolStrip1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolStrip1_MouseDown);
+            // 
+            // Filebtn
+            // 
+            this.Filebtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.Filebtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openEncryptedToolStripMenuItem,
+            this.openDecryptedSaveToolStripMenuItem,
+            this.saveToFileToolStripMenuItem});
+            this.Filebtn.Image = ((System.Drawing.Image)(resources.GetObject("Filebtn.Image")));
+            this.Filebtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.Filebtn.Name = "Filebtn";
+            this.Filebtn.Size = new System.Drawing.Size(38, 22);
+            this.Filebtn.Text = "File";
+            // 
+            // openDecryptedSaveToolStripMenuItem
+            // 
+            this.openDecryptedSaveToolStripMenuItem.Name = "openDecryptedSaveToolStripMenuItem";
+            this.openDecryptedSaveToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.openDecryptedSaveToolStripMenuItem.Text = "Open Decrypted Save";
+            this.openDecryptedSaveToolStripMenuItem.Click += new System.EventHandler(this.openDecryptedSaveToolStripMenuItem_Click);
+            // 
+            // saveToFileToolStripMenuItem
+            // 
+            this.saveToFileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.decryptedToolStripMenuItem,
+            this.encryptedToolStripMenuItem});
+            this.saveToFileToolStripMenuItem.Name = "saveToFileToolStripMenuItem";
+            this.saveToFileToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.saveToFileToolStripMenuItem.Text = "Save to File";
+            // 
+            // decryptedToolStripMenuItem
+            // 
+            this.decryptedToolStripMenuItem.Name = "decryptedToolStripMenuItem";
+            this.decryptedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.decryptedToolStripMenuItem.Text = "Decrypted";
+            this.decryptedToolStripMenuItem.Click += new System.EventHandler(this.decryptedToolStripMenuItem_Click);
+            // 
+            // encryptedToolStripMenuItem
+            // 
+            this.encryptedToolStripMenuItem.Name = "encryptedToolStripMenuItem";
+            this.encryptedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.encryptedToolStripMenuItem.Text = "Encrypted";
+            this.encryptedToolStripMenuItem.Click += new System.EventHandler(this.encryptedToolStripMenuItem_Click);
             // 
             // toolStripDropDownButton1
             // 
@@ -94,7 +143,6 @@
             this.Opensavebtn.Name = "Opensavebtn";
             this.Opensavebtn.Size = new System.Drawing.Size(173, 22);
             this.Opensavebtn.Text = "Open SMTV:V Save";
-            
             // 
             // quitToolStripMenuItem
             // 
@@ -111,6 +159,7 @@
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(127, 425);
             this.flowLayoutPanel1.TabIndex = 0;
+            this.flowLayoutPanel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.flowLayoutPanel1_MouseDown);
             // 
             // PLDatabtn
             // 
@@ -138,23 +187,12 @@
             this.Demonbtn.UseVisualStyleBackColor = true;
             this.Demonbtn.Click += new System.EventHandler(this.Demonbtn_Click);
             // 
-            // Filebtn
+            // openEncryptedToolStripMenuItem
             // 
-            this.Filebtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.Filebtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openDecryptedSaveToolStripMenuItem});
-            this.Filebtn.Image = ((System.Drawing.Image)(resources.GetObject("Filebtn.Image")));
-            this.Filebtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.Filebtn.Name = "Filebtn";
-            this.Filebtn.Size = new System.Drawing.Size(38, 22);
-            this.Filebtn.Text = "File";
-            // 
-            // openDecryptedSaveToolStripMenuItem
-            // 
-            this.openDecryptedSaveToolStripMenuItem.Name = "openDecryptedSaveToolStripMenuItem";
-            this.openDecryptedSaveToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.openDecryptedSaveToolStripMenuItem.Text = "Open Decrypted Save";
-            this.openDecryptedSaveToolStripMenuItem.Click += new System.EventHandler(this.openDecryptedSaveToolStripMenuItem_Click);
+            this.openEncryptedToolStripMenuItem.Name = "openEncryptedToolStripMenuItem";
+            this.openEncryptedToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.openEncryptedToolStripMenuItem.Text = "Open Encrypted Save";
+            this.openEncryptedToolStripMenuItem.Click += new System.EventHandler(this.openEncryptedToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -192,6 +230,10 @@
         public System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStripDropDownButton Filebtn;
         private System.Windows.Forms.ToolStripMenuItem openDecryptedSaveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem decryptedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem encryptedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openEncryptedToolStripMenuItem;
     }
 }
 

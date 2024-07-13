@@ -48,7 +48,7 @@ namespace SMTV_VSaveEditor
             Array.Resize(ref lnameb, 10);
 
             byte[] data = File.ReadAllBytes(path);
-            MemoryStream ms = new MemoryStream(data);
+            MemoryStream ms = new MemoryStream(formstuff.svdata);
             BinaryWriter bw = new BinaryWriter(ms);
 
 
@@ -160,82 +160,85 @@ namespace SMTV_VSaveEditor
 
             //resistance
 
-            int[] resistoff = new int[14];
-            resistoff[0] = ploffs.ResPHY;
-            resistoff[1] = ploffs.ResFIR;
-            resistoff[2] = ploffs.ResICE;
-            resistoff[3] = ploffs.ResELE;
-            resistoff[4] = ploffs.ResFOR;
-            resistoff[5] = ploffs.ResLIG;
-            resistoff[6] = ploffs.ResDAR;
-
-            resistoff[7] = ploffs.ResPHYC;
-            resistoff[8] = ploffs.ResFIRC;
-            resistoff[9] = ploffs.ResICEC;
-            resistoff[10] = ploffs.ResELEC;
-            resistoff[11] = ploffs.ResFORC;
-            resistoff[12] = ploffs.ResLIGC;
-            resistoff[13] = ploffs.ResDARC;
-
-            for (int i = 0; i < 7; i++)
-            {
-                int resistval = 100;
-                ComboBox cbb = PLResistS.Controls[i] as ComboBox;
-                switch(cbb.SelectedIndex)
-                {
-                    case 0:
-                        resistval = 0;
-                        break;
-                    case 1:
-                        resistval = 50;
-                        break;
-                    case 2:
-                        resistval = 100;
-                        break;
-                    case 3:
-                        resistval = 125;
-                        break;
-                }
-                bw.BaseStream.Position = resistoff[i];
-                bw.Write(BitConverter.GetBytes(resistval),0,2);
-                bw.BaseStream.Position = resistoff[i+7];
-                bw.Write(BitConverter.GetBytes(resistval), 0, 2);
-
-            }
-
-            //potentials
-
-            int[]potoffs = new int[11];
-            potoffs[0] = ploffs.POTPHY;
-            potoffs[1] = ploffs.POTFIR;
-            potoffs[2] = ploffs.POTICE;
-            potoffs[3] = ploffs.POTELE;
-            potoffs[4] = ploffs.POTFOR;
-            potoffs[5] = ploffs.POTLIG;
-            potoffs[6] = ploffs.POTDAR;
-            potoffs[7] = ploffs.POTALM;
-            potoffs[8] = ploffs.POTAIL;
-            potoffs[9] = ploffs.POTHEA;
-            potoffs[10] = ploffs.POTSUP;
-
-            for (int i = 0; i < 11; i++)
-            {
-                bw.BaseStream.Position = potoffs[i];
-                NumericUpDown nm = Potential.Controls[i]as NumericUpDown;
-                byte[] nmbyte = BitConverter.GetBytes(Convert.ToInt32(nm.Value));
-                if (nm.Value > -1)
-                {
-                    bw.Write(nmbyte,0,2);
-                }else if (nm.Value < -1)
-                {
-                    nmbyte = BitConverter.GetBytes(Convert.ToInt32(65535 - nm.Value));
-                    bw.Write(nm.Value);
-                }
-            }
-
-
+            //int[] resistoff = new int[14];
+            //resistoff[0] = ploffs.ResPHY;
+            //resistoff[1] = ploffs.ResFIR;
+            //resistoff[2] = ploffs.ResICE;
+            //resistoff[3] = ploffs.ResELE;
+            //resistoff[4] = ploffs.ResFOR;
+            //resistoff[5] = ploffs.ResLIG;
+            //resistoff[6] = ploffs.ResDAR;
+            //
+            //resistoff[7] = ploffs.ResPHYC;
+            //resistoff[8] = ploffs.ResFIRC;
+            //resistoff[9] = ploffs.ResICEC;
+            //resistoff[10] = ploffs.ResELEC;
+            //resistoff[11] = ploffs.ResFORC;
+            //resistoff[12] = ploffs.ResLIGC;
+            //resistoff[13] = ploffs.ResDARC;
+            //
+            //for (int i = 0; i < 7; i++)
+            //{
+            //    int resistval = 100;
+            //    ComboBox cbb = PLResistS.Controls[i] as ComboBox;
+            //    switch(cbb.SelectedIndex)
+            //    {
+            //        case 0:
+            //            resistval = 0;
+            //            break;
+            //        case 1:
+            //            resistval = 50;
+            //            break;
+            //        case 2:
+            //            resistval = 100;
+            //            break;
+            //        case 3:
+            //            resistval = 125;
+            //            break;
+            //    }
+            //    bw.BaseStream.Position = resistoff[i];
+            //    bw.Write(BitConverter.GetBytes(resistval),0,2);
+            //    bw.BaseStream.Position = resistoff[i+7];
+            //    bw.Write(BitConverter.GetBytes(resistval), 0, 2);
+            //
+            //}
+            //
+            ////potentials
+            //
+            //int[]potoffs = new int[11];
+            //potoffs[0] = ploffs.POTPHY;
+            //potoffs[1] = ploffs.POTFIR;
+            //potoffs[2] = ploffs.POTICE;
+            //potoffs[3] = ploffs.POTELE;
+            //potoffs[4] = ploffs.POTFOR;
+            //potoffs[5] = ploffs.POTLIG;
+            //potoffs[6] = ploffs.POTDAR;
+            //potoffs[7] = ploffs.POTALM;
+            //potoffs[8] = ploffs.POTAIL;
+            //potoffs[9] = ploffs.POTHEA;
+            //potoffs[10] = ploffs.POTSUP;
+            //
+            //for (int i = 0; i < 11; i++)
+            //{
+            //    bw.BaseStream.Position = potoffs[i];
+            //    NumericUpDown nm = Potential.Controls[i]as NumericUpDown;
+            //    byte[] nmbyte = BitConverter.GetBytes(Convert.ToInt32(nm.Value));
+            //    if (nm.Value > -1)
+            //    {
+            //        bw.Write(nmbyte,0,2);
+            //    }else if (nm.Value < -1)
+            //    {
+            //        nmbyte = BitConverter.GetBytes(Convert.ToInt32(65535 - nm.Value));
+            //        bw.Write(nm.Value);
+            //    }
+            //}
 
 
+            //macca
+            bw.BaseStream.Position = 0x3d32;
+            bw.Write(BitConverter.GetBytes((int)maccactl.Value),0,4);
+            //glory
+            bw.Write(BitConverter.GetBytes((int)Gloryctl.Value), 0, 3);
 
             //write all data
             File.WriteAllBytes(path, ms.ToArray());

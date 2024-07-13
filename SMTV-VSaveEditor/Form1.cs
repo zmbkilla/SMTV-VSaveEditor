@@ -11,12 +11,27 @@ using Org.BouncyCastle.Crypto.Parameters;
 using System.Data.OleDb;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Buffers;
+using System.Buffers.Binary;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 
 namespace SMTV_VSaveEditor
 {
     public partial class Form1 : Form
     {
 
+
+        public static byte[] savefiledata(string location)
+        {
+            byte[] result = File.ReadAllBytes(location);
+
+            return result;
+        }
+
+
+        public byte[] svdata;
         public string default_file = Directory.GetCurrentDirectory()+"\\default";
         public int filecheck = 0x40;
         public string savepath;
@@ -32,7 +47,7 @@ namespace SMTV_VSaveEditor
         [DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
 
-        private void Form1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        public void Form1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -44,6 +59,7 @@ namespace SMTV_VSaveEditor
 
 
         Offsets GSOffsets = new Offsets();
+        
         public Form1()
         {
             InitializeComponent();
@@ -79,6 +95,7 @@ namespace SMTV_VSaveEditor
                         savepath = lines[i].Replace("path:", "");
                     if(savepath != "")
                     {
+                        svdata = savefiledata(savepath);
                         MessageBox.Show("Loaded save from: " + savepath);
                     }
                     
@@ -101,11 +118,34 @@ namespace SMTV_VSaveEditor
             string fname = "",lname="";
             if (File.Exists(savepath))
             {
-                MemoryStream ms = new MemoryStream(File.ReadAllBytes(savepath));
+                MemoryStream ms = new MemoryStream(svdata);
                 BinaryReader reader = new BinaryReader(ms);
                 pld.path = savepath;
                 pld.offset = ploff;
-                
+
+                //cash
+                ms.Position = 0x3D32;
+                byte[] reverseb = reader.ReadBytes(3);
+
+
+                reverseb = reverseb.Reverse().ToArray(); ;
+                string maccastring = BitConverter.ToString(reverseb).Replace("-","");
+                maccastring = maccastring.Replace("00", "");
+                int maccaval = Int32.Parse(maccastring,System.Globalization.NumberStyles.HexNumber); 
+                //MessageBox.Show(maccastring);
+                pld.maccactl.Value = maccaval;
+                //glory
+                ms.Position = 0x3d4a;
+                reverseb = reader.ReadBytes(3);
+                reverseb.Reverse().ToArray();
+                string glorystring = BitConverter.ToString(reverseb).Replace("-", "");
+                glorystring = glorystring.Replace("00", "");
+                int gloryval = Int32.Parse(glorystring,System.Globalization.NumberStyles.HexNumber);
+                pld.Gloryctl.Value = gloryval;
+
+
+
+
                 ms.Position = GSOffsets.FN3;
 
                 
@@ -161,6 +201,7 @@ namespace SMTV_VSaveEditor
 
                     ms.Position = plstatoffsets[i];
                     stat = BitConverter.ToString(reader.ReadBytes(2)).Replace("-", "");
+                    
                     reverse = stat;
                     stat = stat.Replace(stat.Substring(0, 2), stat.Substring(2, 2));
                     stat = stat.Insert(2,reverse.Substring(0,2));
@@ -256,152 +297,168 @@ namespace SMTV_VSaveEditor
 
                 //Resist
 
-                int[] resistoff = new int[14];
-                resistoff[0] = GSOffsets.ResPHY;
-                resistoff[1] = GSOffsets.ResFIR;
-                resistoff[2] = GSOffsets.ResICE;
-                resistoff[3] = GSOffsets.ResELE;
-                resistoff[4] = GSOffsets.ResFOR;
-                resistoff[5] = GSOffsets.ResLIG;
-                resistoff[6] = GSOffsets.ResDAR;
+                //int[] resistoff = new int[14];
+                //resistoff[0] = GSOffsets.ResPHY;
+                //resistoff[1] = GSOffsets.ResFIR;
+                //resistoff[2] = GSOffsets.ResICE;
+                //resistoff[3] = GSOffsets.ResELE;
+                //resistoff[4] = GSOffsets.ResFOR;
+                //resistoff[5] = GSOffsets.ResLIG;
+                //resistoff[6] = GSOffsets.ResDAR;
+                //
+                //resistoff[7] = GSOffsets.ResPHYC;
+                //resistoff[8] = GSOffsets.ResFIRC;
+                //resistoff[9] = GSOffsets.ResICEC;
+                //resistoff[10] = GSOffsets.ResELEC;
+                //resistoff[11] = GSOffsets.ResFORC;
+                //resistoff[12] = GSOffsets.ResLIGC;
+                //resistoff[13] = GSOffsets.ResDARC;
+                //
+                //string[] resisttext = new string[4];
+                //resisttext[0] = "Null";
+                //resisttext[1] = "Resist";
+                //resisttext[2] = "Normal";
+                //resisttext[3] = "Weak";
+                //string[] stats = new string[7];
+                //stats[0] = "PHYSICAL";
+                //stats[1] = "FIRE";
+                //stats[2] = "ICE";
+                //stats[3] = "ELECTRIC";
+                //stats[4] = "FORCE";
+                //stats[5] = "LIGHT";
+                //stats[6] = "DARK";
+                //Panel resistP = pld.PLResistS;
+                //for(int i = 0; i < 7; i++)
+                //{
+                //    ComboBox cbb = new ComboBox();
+                //    
+                //    cbb.BindingContext = new BindingContext();
+                //    cbb.DataSource = resisttext;
+                //    cbb.Size = new Size(50, 20);
+                //    
+                //        
+                //       cbb.Location = new Point(75, 5 + (i * 25));
+                //    
+                //    
+                //    
+                //    resistP.Controls.Add(cbb);
+                //
+                //}
+                //
+                //
+                //for(int i = 0; i < 7; i++)
+                //{
+                //    ms.Position = resistoff[i+7];
+                //    ComboBox cbb = pld.PLResistS.Controls[i] as ComboBox;
+                //    var val = BitConverter.ToString(reader.ReadBytes(1)).Replace("-", "");
+                //    if (val == "00")
+                //    {
+                //        cbb.SelectedIndex = 0;
+                //    } else if (val == "32")
+                //    {
+                //        cbb.SelectedIndex = 1;
+                //    } else if(val == "64")
+                //    {
+                //        cbb.SelectedIndex= 2;
+                //    } else if (val == "7D")
+                //    {
+                //        cbb.SelectedIndex = 3;
+                //    }
+                //}
+                //
+                //for (int i = 0; i < 7; i++)
+                //{
+                //    Label lbl = new Label();
+                //    lbl.Location = new Point(5,10+(i*25));
+                //    lbl.Text = stats[i];
+                //    pld.PLResistS.Controls.Add(lbl);
+                //}
+                //
+                //
+                ////Potentials
+                //
+                //int[] potoffs = new int[11];
+                //potoffs[0] = GSOffsets.POTPHY;
+                //potoffs[1] = GSOffsets.POTFIR;
+                //potoffs[2] = GSOffsets.POTICE;
+                //potoffs[3] = GSOffsets.POTELE;
+                //potoffs[4] = GSOffsets.POTFOR;
+                //potoffs[5] = GSOffsets.POTLIG;
+                //potoffs[6] = GSOffsets.POTDAR;
+                //potoffs[7] = GSOffsets.POTALM;
+                //potoffs[8] = GSOffsets.POTAIL;
+                //potoffs[9] = GSOffsets.POTHEA;
+                //potoffs[10] = GSOffsets.POTSUP;
+                //
+                //string[]pottext = new string[11];
+                //pottext[0] = "PHYSICAL";
+                //pottext[1] = "FIRE";
+                //pottext[2] = "ICE";
+                //pottext[3] = "ELECTRIC";
+                //pottext[4] = "FORCE";
+                //pottext[5] = "LIGHT";
+                //pottext[6] = "DARK";
+                //pottext[7] = "ALMIGHTY";
+                //pottext[8] = "AILMENT";
+                //pottext[9] = "HEALING";
+                //pottext[10] = "SUPPORT";
+                //
+                //for (int i = 0;i < 11; i++)
+                //{
+                //    Panel pn = pld.Potential as Panel;
+                //    NumericUpDown nm = new NumericUpDown();
+                //    nm.BindingContext = new BindingContext();
+                //    nm.Maximum = 9;
+                //    nm.Minimum = -9;
+                //    nm.Size = new Size(50, 20);
+                //    nm.Location = new Point(75, 5 + (i * 25));
+                //    pn.Controls.Add(nm);
+                //}
+                //for (int i = 0; i < 11; i++)
+                //{
+                //    Panel pn = pld.Potential as Panel;
+                //    Label lbl = new Label();
+                //    lbl.BindingContext = new BindingContext();
+                //    lbl.Text = pottext[i];
+                //    lbl.Location = new Point(5, 10 + (i * 25));
+                //    pn.Controls.Add(lbl);
+                //}
+                //
+                //for (int i=0; i < 11; i++)
+                //{
+                //    ms.Position = potoffs[i];
+                //    Panel pn = pld.Potential as Panel;
+                //    NumericUpDown nm = pn.Controls[i] as NumericUpDown;
+                //    string readval = BitConverter.ToString(reader.ReadBytes(2)).Replace("-", "");
+                //    string g2 = readval.Substring(0, 2);
+                //    readval = readval.Replace(readval.Substring(0, 2), readval.Substring(2, 2));
+                //    readval = readval.Insert(2, g2);
+                //    readval = readval.Remove(4, 2);
+                //    int val = Int32.Parse(readval,System.Globalization.NumberStyles.HexNumber);
+                //    if(val <= 9)
+                //    {
+                //        nm.Value = val;
+                //    }else if (val > 9)
+                //    {
+                //        nm.Value = 65535 - val;
+                //    }
+                //}
 
-                resistoff[7] = GSOffsets.ResPHYC;
-                resistoff[8] = GSOffsets.ResFIRC;
-                resistoff[9] = GSOffsets.ResICEC;
-                resistoff[10] = GSOffsets.ResELEC;
-                resistoff[11] = GSOffsets.ResFORC;
-                resistoff[12] = GSOffsets.ResLIGC;
-                resistoff[13] = GSOffsets.ResDARC;
-
-                string[] resisttext = new string[4];
-                resisttext[0] = "Null";
-                resisttext[1] = "Resist";
-                resisttext[2] = "Normal";
-                resisttext[3] = "Weak";
-                string[] stats = new string[7];
-                stats[0] = "PHYSICAL";
-                stats[1] = "FIRE";
-                stats[2] = "ICE";
-                stats[3] = "ELECTRIC";
-                stats[4] = "FORCE";
-                stats[5] = "LIGHT";
-                stats[6] = "DARK";
-                Panel resistP = pld.PLResistS;
-                for(int i = 0; i < 7; i++)
-                {
-                    ComboBox cbb = new ComboBox();
-                    
-                    cbb.BindingContext = new BindingContext();
-                    cbb.DataSource = resisttext;
-                    cbb.Size = new Size(50, 20);
-                    
-                        
-                       cbb.Location = new Point(75, 5 + (i * 25));
-                    
-                    
-                    
-                    resistP.Controls.Add(cbb);
-
-                }
 
 
-                for(int i = 0; i < 7; i++)
-                {
-                    ms.Position = resistoff[i+7];
-                    ComboBox cbb = pld.PLResistS.Controls[i] as ComboBox;
-                    var val = BitConverter.ToString(reader.ReadBytes(1)).Replace("-", "");
-                    if (val == "00")
-                    {
-                        cbb.SelectedIndex = 0;
-                    } else if (val == "32")
-                    {
-                        cbb.SelectedIndex = 1;
-                    } else if(val == "64")
-                    {
-                        cbb.SelectedIndex= 2;
-                    } else if (val == "7D")
-                    {
-                        cbb.SelectedIndex = 3;
-                    }
-                }
+                //innate
+                SkillsData sform = new SkillsData();
+                
+                
+                pld.PIScmb.DisplayMember = "Value";
+                pld.PIScmb.ValueMember = "Key";
+                pld.PIScmb.DataSource = new BindingSource(sform.ISkillIds, null);
+                ms.Position = GSOffsets.INNATEF;
+                byte[] readbytes = reader.ReadBytes(2);
+                readbytes = readbytes.Reverse().ToArray();
+                int innateval = Int32.Parse(BitConverter.ToString(readbytes).Replace("-", ""), System.Globalization.NumberStyles.HexNumber);
+                pld.PIScmb.SelectedValue = innateval;
 
-                for (int i = 0; i < 7; i++)
-                {
-                    Label lbl = new Label();
-                    lbl.Location = new Point(5,10+(i*25));
-                    lbl.Text = stats[i];
-                    pld.PLResistS.Controls.Add(lbl);
-                }
-
-
-                //Potentials
-
-                int[] potoffs = new int[11];
-                potoffs[0] = GSOffsets.POTPHY;
-                potoffs[1] = GSOffsets.POTFIR;
-                potoffs[2] = GSOffsets.POTICE;
-                potoffs[3] = GSOffsets.POTELE;
-                potoffs[4] = GSOffsets.POTFOR;
-                potoffs[5] = GSOffsets.POTLIG;
-                potoffs[6] = GSOffsets.POTDAR;
-                potoffs[7] = GSOffsets.POTALM;
-                potoffs[8] = GSOffsets.POTAIL;
-                potoffs[9] = GSOffsets.POTHEA;
-                potoffs[10] = GSOffsets.POTSUP;
-
-                string[]pottext = new string[11];
-                pottext[0] = "PHYSICAL";
-                pottext[1] = "FIRE";
-                pottext[2] = "ICE";
-                pottext[3] = "ELECTRIC";
-                pottext[4] = "FORCE";
-                pottext[5] = "LIGHT";
-                pottext[6] = "DARK";
-                pottext[7] = "ALMIGHTY";
-                pottext[8] = "AILMENT";
-                pottext[9] = "HEALING";
-                pottext[10] = "SUPPORT";
-
-                for (int i = 0;i < 11; i++)
-                {
-                    Panel pn = pld.Potential as Panel;
-                    NumericUpDown nm = new NumericUpDown();
-                    nm.BindingContext = new BindingContext();
-                    nm.Maximum = 9;
-                    nm.Minimum = -9;
-                    nm.Size = new Size(50, 20);
-                    nm.Location = new Point(75, 5 + (i * 25));
-                    pn.Controls.Add(nm);
-                }
-                for (int i = 0; i < 11; i++)
-                {
-                    Panel pn = pld.Potential as Panel;
-                    Label lbl = new Label();
-                    lbl.BindingContext = new BindingContext();
-                    lbl.Text = pottext[i];
-                    lbl.Location = new Point(5, 10 + (i * 25));
-                    pn.Controls.Add(lbl);
-                }
-
-                for (int i=0; i < 11; i++)
-                {
-                    ms.Position = potoffs[i];
-                    Panel pn = pld.Potential as Panel;
-                    NumericUpDown nm = pn.Controls[i] as NumericUpDown;
-                    string readval = BitConverter.ToString(reader.ReadBytes(2)).Replace("-", "");
-                    string g2 = readval.Substring(0, 2);
-                    readval = readval.Replace(readval.Substring(0, 2), readval.Substring(2, 2));
-                    readval = readval.Insert(2, g2);
-                    readval = readval.Remove(4, 2);
-                    int val = Int32.Parse(readval,System.Globalization.NumberStyles.HexNumber);
-                    if(val <= 9)
-                    {
-                        nm.Value = val;
-                    }else if (val > 9)
-                    {
-                        nm.Value = 65535 - val;
-                    }
-                }
 
                 //for (int i = 0; i < maxskill; i++)
                 //{
@@ -418,6 +475,10 @@ namespace SMTV_VSaveEditor
                 //    dgvskill.Rows.Add(i,skillstr);
                 //    ms.Position += 6;
                 //}
+
+
+                ms.Close();
+
 
                 panel1.Controls.Add(pld);
             }
@@ -467,7 +528,8 @@ namespace SMTV_VSaveEditor
         private void Demonbtn_Click(object sender, EventArgs e)
         {
             var dmn = new Demon();
-            dmn.svpath = savepath;
+            dmn.svpath = svdata;
+            
             panel1.Controls.Clear();
             panel1.Controls.Add(dmn);
         }
@@ -527,6 +589,71 @@ namespace SMTV_VSaveEditor
 
             savepath = pathloc;
             MessageBox.Show("Loaded save from: " + savepath);
+        }
+
+        private void flowLayoutPanel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            Form1_MouseDown(sender,e);
+        }
+
+        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            Form1_MouseDown(sender, e);
+        }
+
+        private void toolStrip1_MouseDown(object sender, MouseEventArgs e)
+        {
+            Form1_MouseDown(sender, e);
+        }
+
+        private void decryptedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog openFileDialog = new SaveFileDialog();
+            openFileDialog.ShowDialog(this);
+            if (openFileDialog.FileName != "")
+            {
+                
+                File.WriteAllBytes(openFileDialog.FileName, svdata);
+            }
+            else
+            {
+                MessageBox.Show("Filename cannot be blank");
+            }
+            
+            
+        }
+        public async void saveEmethod()
+        {
+            AESManager asmgr = new AESManager();
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.ShowDialog(this);
+            if (sfd != null)
+            {
+                byte[] outfile = await asmgr.Encrypt(svdata);
+                File.WriteAllBytes(sfd.FileName, outfile);
+            }
+        }
+
+        public async void openEmethod()
+        {
+            AESManager aesm = new AESManager();
+            OpenFileDialog opd = new OpenFileDialog();
+            opd.ShowDialog(this);
+            if (opd.FileName != "")
+            {
+                svdata = await aesm.Decrypt(File.ReadAllBytes(opd.FileName));
+            }
+        }
+
+        private void encryptedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveEmethod();
+        }
+
+        private void openEncryptedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openEmethod();
+            MessageBox.Show("loaded save");
         }
     }
 }

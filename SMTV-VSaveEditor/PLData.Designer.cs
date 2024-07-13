@@ -44,7 +44,14 @@
             this.PLResistS = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.Potential = new System.Windows.Forms.Panel();
+            this.maccactl = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
+            this.Gloryctl = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.PIScmb = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.statview)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maccactl)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Gloryctl)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -158,33 +165,92 @@
             this.PLResistS.AutoScroll = true;
             this.PLResistS.AutoScrollMargin = new System.Drawing.Size(100, 100);
             this.PLResistS.AutoScrollMinSize = new System.Drawing.Size(100, 50);
+            this.PLResistS.Enabled = false;
             this.PLResistS.Location = new System.Drawing.Point(432, 329);
             this.PLResistS.Name = "PLResistS";
             this.PLResistS.Size = new System.Drawing.Size(188, 190);
             this.PLResistS.TabIndex = 14;
+            this.PLResistS.Visible = false;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(415, 304);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(60, 13);
+            this.label5.Size = new System.Drawing.Size(37, 13);
             this.label5.TabIndex = 15;
-            this.label5.Text = "Resistance";
+            this.label5.Text = "Innate";
             // 
             // Potential
             // 
             this.Potential.AutoScroll = true;
             this.Potential.AutoScrollMargin = new System.Drawing.Size(100, 100);
             this.Potential.AutoScrollMinSize = new System.Drawing.Size(100, 50);
+            this.Potential.Enabled = false;
             this.Potential.Location = new System.Drawing.Point(636, 329);
             this.Potential.Name = "Potential";
             this.Potential.Size = new System.Drawing.Size(203, 190);
             this.Potential.TabIndex = 15;
+            this.Potential.Visible = false;
+            // 
+            // maccactl
+            // 
+            this.maccactl.Location = new System.Drawing.Point(418, 29);
+            this.maccactl.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            0});
+            this.maccactl.Name = "maccactl";
+            this.maccactl.Size = new System.Drawing.Size(120, 20);
+            this.maccactl.TabIndex = 16;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(345, 30);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(40, 13);
+            this.label6.TabIndex = 17;
+            this.label6.Text = "Macca";
+            // 
+            // Gloryctl
+            // 
+            this.Gloryctl.Location = new System.Drawing.Point(418, 81);
+            this.Gloryctl.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.Gloryctl.Name = "Gloryctl";
+            this.Gloryctl.Size = new System.Drawing.Size(120, 20);
+            this.Gloryctl.TabIndex = 18;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(345, 83);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(31, 13);
+            this.label7.TabIndex = 19;
+            this.label7.Text = "Glory";
+            // 
+            // PIScmb
+            // 
+            this.PIScmb.FormattingEnabled = true;
+            this.PIScmb.Location = new System.Drawing.Point(417, 329);
+            this.PIScmb.Name = "PIScmb";
+            this.PIScmb.Size = new System.Drawing.Size(121, 21);
+            this.PIScmb.TabIndex = 20;
             // 
             // PLData
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.PIScmb);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.Gloryctl);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.maccactl);
             this.Controls.Add(this.Potential);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.PLResistS);
@@ -201,6 +267,8 @@
             this.Size = new System.Drawing.Size(861, 611);
             this.Load += new System.EventHandler(this.PLData_Load);
             ((System.ComponentModel.ISupportInitialize)(this.statview)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maccactl)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Gloryctl)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -224,5 +292,10 @@
         public System.Windows.Forms.Panel PLResistS;
         private System.Windows.Forms.Label label5;
         public System.Windows.Forms.Panel Potential;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        public System.Windows.Forms.NumericUpDown maccactl;
+        public System.Windows.Forms.NumericUpDown Gloryctl;
+        public System.Windows.Forms.ComboBox PIScmb;
     }
 }

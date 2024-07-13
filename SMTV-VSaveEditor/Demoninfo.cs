@@ -8,19 +8,21 @@ using System.Windows;
 using System.Windows.Forms;
 using static System.Windows.Forms.AxHost;
 
+
 namespace SMTV_VSaveEditor
 {
     internal class Demoninfo
     {
-        public static int[] Demondata(int offset,string svloc)
+        
+        public static int[] Demondata(int offset, byte[] svloc)
         {
-            //format demonID,hpb, mpb,strb,vitb,magb,agib,lub,hpa, mpa,stra,vita,maga,agia,lua,hpc, mpc,strc,vitc,magc,agic,luc,skill1,skill2,skill3,skill4,skill5,skill6,skill7,skill8, resistphy,resistfir, resistice,resistele,resistfor,resistlig,resistdar,potphy,potfir,potice,potelec,potfor,potlig,potdar,potalm,potail,pothea,potsup
+            //format hpb, mpb,strb,vitb,magb,agib,lub,hpa, mpa,stra,vita,maga,agia,lua,hpc, mpc,strc,vitc,magc,agic,luc,demonID,skill1,skill2,skill3,skill4,skill5,skill6,skill7,skill8, resistphy,resistfir, resistice,resistele,resistfor,resistlig,resistdar,potphy,potfir,potice,potelec,potfor,potlig,potdar,potalm,potail,pothea,potsup
 
 
             int reset = offset;
             byte[] iddata = new byte[403];
-            int[] result = new int[48];
-            MemoryStream ms = new MemoryStream(File.ReadAllBytes(svloc));
+            int[] result = new int[49];
+            MemoryStream ms = new MemoryStream(svloc);
             BinaryReader br = new BinaryReader(ms);
             int baseoff = offset;
             int y = 0;
@@ -136,6 +138,13 @@ namespace SMTV_VSaveEditor
                 int convert = Int32.Parse(Dpot,System.Globalization.NumberStyles.HexNumber);
                 result[i+37] = convert;
             }
+            //innate
+            offset = reset;
+            ms.Position = offset + 408;
+            byte[] readbytes= br.ReadBytes(2);
+            readbytes = readbytes.Reverse().ToArray();
+            result[48] = Int32.Parse(BitConverter.ToString(readbytes).Replace("-",""),System.Globalization.NumberStyles.HexNumber);
+
 
             return result;
         }
@@ -161,6 +170,19 @@ namespace SMTV_VSaveEditor
             //resist&pot
             result[12] = offset + 272;
             result[13] = offset + 384;
+            return result;
+        }
+
+        public static List<int[]> Demonslots(byte[] filename)
+        {
+            Offsets ofs = new Offsets();
+
+            List<int[]>result = new List<int[]>();
+            for (int i = 0; i < 24; i++)
+            {
+                result.Add(Demondata(ofs.DEMONHPB + (i * 424), filename));
+            }
+
             return result;
         }
         
